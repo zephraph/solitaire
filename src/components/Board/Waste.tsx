@@ -11,16 +11,22 @@
 */
 
 import React from "react";
-import { Box, BoxProps } from "ink";
 import CardSlot from "../CardSlot";
-import { useRecoilValue } from "recoil";
-import { selectedState } from "../../state";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { selectedState, wasteState } from "../../state";
+import Card, { CARD_WIDTH } from "../Card";
+import { Box } from "ink";
 
-export default function Waste(props: BoxProps) {
+export default function Waste() {
+  const waste = useRecoilValue(wasteState);
   const [selected] = useRecoilValue(selectedState("waste"));
   return (
-    <Box flexDirection="column" {...props}>
-      <CardSlot selected={selected} />
+    <Box marginRight={CARD_WIDTH}>
+      {waste.length ? (
+        <Card {...waste[0]} faceUp={true} selected={selected} />
+      ) : (
+        <CardSlot selected={selected} />
+      )}
     </Box>
   );
 }
