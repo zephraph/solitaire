@@ -72,7 +72,7 @@ export const selectionState = selector<SelectionCoord>({
     const columnLength = get(tableauState)[nextX].length;
 
     if (nextX === 2 && y === 1 && nextY - y < 0) {
-      nextY = columnLength + 1;
+      nextY = columnLength;
     }
 
     if (nextX === 2 && y === columnLength + 1 && nextY - y > 0) {
@@ -80,10 +80,10 @@ export const selectionState = selector<SelectionCoord>({
     }
 
     if (nextY < 0 || (nextY > columnLength + 1 && nextX !== nextCard.x)) {
-      nextY = columnLength + 1;
+      nextY = columnLength;
     }
 
-    if (nextY > columnLength + 1) {
+    if (nextY > columnLength) {
       nextY = 0;
     }
 
