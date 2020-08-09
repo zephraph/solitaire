@@ -1,0 +1,28 @@
+{
+	"name": "@zephraph/solitaire",
+	"version": "1.0.0",
+	"description": "Play solitaire in the terminal. `npx @zephraph/solitaire`",
+	"main": "index.js",
+	"repository": "https://github.com/zephraph/solitaire",
+	"author": "Justin Bennett",
+	"license": "MIT",
+	"scripts": {
+		"start": "node game",
+		"build": "swc src -d game",
+		"dev": "yarn build -w",
+		"postinstall": "patch-package"
+	},
+	"devDependencies": {
+		"@swc/cli": "^0.1.26",
+		"@swc/core": "^1.2.11",
+		"@types/react": "^16.9.44",
+		"chokidar": "^3.4.1",
+		"patch-package": "^6.2.2",
+		"spack": "^1.0.0"
+	},
+	"dependencies": {
+		"ink": "^3.0.3",
+		"react": "^16.13.1",
+		"recoil": "^0.0.10"
+	}
+}
