@@ -11,16 +11,14 @@
 */
 
 import React, { FC } from "react";
-import { Box } from "ink";
 import CardSlot from "../CardSlot";
-import { useRecoilState } from "recoil";
-import { stockState, wasteState } from "../../state";
+import { useRecoilValue } from "recoil";
+import { selectedState } from "../../state";
 
 const Stock: FC = () => {
-	const [stock, setStock] = useRecoilState(stockState);
-	const [waste, setWaste] = useRecoilState(wasteState);
+  const [selected] = useRecoilValue(selectedState("stock"));
 
-	return <CardSlot />;
+  return <CardSlot selected={selected} />;
 };
 
 export default Stock;
