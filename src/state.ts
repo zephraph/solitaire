@@ -56,16 +56,29 @@ export const selectionState = selector<SelectionCoord>({
       set(selectionCoords, { x: 0, y: 0 });
       return;
     }
+    const { x, y } = get(selectionCoords);
     let nextX = nextCard.x;
     let nextY = nextCard.y;
 
-    if (nextCard.x < 0) {
+    if (nextX < 0) {
       nextX = 6;
-    } else if (nextCard.x > 6) {
+    } else if (nextX > 6) {
       nextX = 0;
+    } else if (nextX === 2 && nextY === 0 && nextX - x > 0) {
+      nextX = 3;
+    } else if (nextX === 2 && nextY === 0 && nextX - x < 0) {
+      nextX = 1;
     }
 
     const columnLength = get(tableauState)[nextX].length;
+
+    if (nextX === 2 && y === 1 && nextY - y < 0) {
+      nextY = columnLength + 1;
+    }
+
+    if (nextX === 2 && y === columnLength + 1 && nextY - y > 0) {
+      nextY = 1;
+    }
 
     if (nextY < 0 || (nextY > columnLength + 1 && nextX !== nextCard.x)) {
       nextY = columnLength + 1;

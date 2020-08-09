@@ -24,9 +24,12 @@ const Tableau: FC = () => {
     <Box>
       {tableau.map((stack, index) =>
         stack.length === 0 ? (
-          <CardSlot selected={selected[index] && selected[index][0]} />
+          <CardSlot
+            key={index}
+            selected={selected[index] && selected[index][0]}
+          />
         ) : (
-          <Card {...stack[0]} />
+          <Card key={index} {...stack[0]} />
         )
       )}
     </Box>
