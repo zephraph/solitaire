@@ -22,18 +22,25 @@ const Tableau: FC = () => {
   const selected = useRecoilValue(selectedState("tableau"));
   return (
     <Box>
-      {tableau.map((stack, index) =>
+      {tableau.map((stack, stackIndex) =>
         stack.length === 0 ? (
           <CardSlot
-            key={index}
-            selected={selected[index] && selected[index][0]}
+            key={"stack" + stackIndex}
+            selected={selected[stackIndex] && selected[stackIndex][0]}
           />
         ) : (
-          <Card
-            key={index}
-            selected={selected[index] && selected[index][0]}
-            {...stack[0]}
-          />
+          <Box flexDirection="column" key={"stack" + stackIndex}>
+            {stack.map((card, cardIndex) => (
+              <Card
+                marginTop={cardIndex > 0 ? -6 : 0}
+                key={"sack" + stackIndex + "+card" + cardIndex}
+                selected={
+                  selected[stackIndex] && selected[stackIndex][cardIndex]
+                }
+                {...card}
+              />
+            ))}
+          </Box>
         )
       )}
     </Box>

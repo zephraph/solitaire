@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text, Spacer } from "ink";
+import { Box, Text, Spacer, BoxProps } from "ink";
 
 export const CARD_WIDTH = 10;
 export const CARD_HEIGHT = 7;
@@ -27,17 +27,17 @@ export enum Suit {
   Clubs = "♣",
 }
 
-interface CardProps {
+interface CardProps extends BoxProps {
   faceUp?: boolean;
   selected?: boolean;
   rank: Rank;
   suit: Suit;
 }
 
-interface CardFaceDownProps {
+interface CardFaceDownProps extends BoxProps {
   selected?: boolean;
 }
-function CardFaceDown({ selected = false }: CardFaceDownProps) {
+function CardFaceDown({ selected = false, ...boxProps }: CardFaceDownProps) {
   const color = selected ? "yellow" : "blue";
   return (
     <Box
@@ -46,6 +46,7 @@ function CardFaceDown({ selected = false }: CardFaceDownProps) {
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
       flexDirection="column"
+      {...boxProps}
     >
       <Text color={color}>▚▚▚▚▚▚▚▚</Text>
       <Text color={color}>▚▚▚▚▚▚▚▚</Text>
@@ -57,10 +58,10 @@ function CardFaceDown({ selected = false }: CardFaceDownProps) {
 }
 
 function Card(props: CardProps) {
-  const { faceUp = false, rank, suit, selected = false } = props;
+  const { faceUp = false, rank, suit, selected = false, ...boxProps } = props;
   const color = suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : null;
   return !faceUp ? (
-    <CardFaceDown selected={selected} />
+    <CardFaceDown selected={selected} {...boxProps} />
   ) : (
     <Box
       borderStyle="round"
@@ -68,11 +69,18 @@ function Card(props: CardProps) {
       height={CARD_HEIGHT}
       flexDirection="column"
       borderColor={(selected && "yellow") || null}
+      {...boxProps}
     >
       <Box>
         <Text color={color}>
           {rank}
           {suit}
+          {"      "}
+          {"      "}
+          {"      "}
+          {"      "}
+          {"      "}
+          {"      "}
         </Text>
       </Box>
       <Spacer />
