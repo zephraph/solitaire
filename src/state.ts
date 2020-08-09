@@ -1,7 +1,10 @@
 import { atom, selector, DefaultValue, selectorFamily } from "recoil";
 import { Rank, Suit } from "./components/Card";
+import { generateDeck } from "./actions";
 
-interface CardState {
+const deck = generateDeck();
+
+export interface CardState {
   rank: Rank;
   suit: Suit;
   faceUp: boolean;
@@ -9,7 +12,7 @@ interface CardState {
 
 export const stockState = atom<CardState[]>({
   key: "stockState",
-  default: [],
+  default: deck.splice(28),
 });
 
 export const wasteState = atom<CardState[]>({
@@ -24,19 +27,15 @@ export const foundationState = atom<
   default: [[], [], [], []],
 });
 
-export const tableauState = atom<
-  [
-    CardState[],
-    CardState[],
-    CardState[],
-    CardState[],
-    CardState[],
-    CardState[],
-    CardState[]
-  ]
->({
+export const tableauState = atom<CardState[][]>({
   key: "tableau",
-  default: [[], [], [], [], [], [], []],
+  default: Array(7)
+    .fill(undefined)
+    .map((_, i) => deck.splice(0, i + 1))
+    .map((stack, i) => {
+      stack[i].faceUp = true;
+      return stack;
+    }),
 });
 
 export type SelectionCoord = { x: number; y: number };

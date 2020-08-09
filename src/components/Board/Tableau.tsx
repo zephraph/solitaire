@@ -29,7 +29,11 @@ const Tableau: FC = () => {
             selected={selected[index] && selected[index][0]}
           />
         ) : (
-          <Card key={index} {...stack[0]} />
+          <Card
+            key={index}
+            selected={selected[index] && selected[index][0]}
+            {...stack[0]}
+          />
         )
       )}
     </Box>
