@@ -71,11 +71,15 @@ export const selectionState = selector<SelectionCoord>({
 
     const columnLength = get(tableauState)[nextX].length;
 
+    if (nextX - x !== 0 && y > 0) {
+      nextY = columnLength;
+    }
+
     if (nextX === 2 && y === 1 && nextY - y < 0) {
       nextY = columnLength;
     }
 
-    if (nextX === 2 && y === columnLength + 1 && nextY - y > 0) {
+    if (nextX === 2 && y === columnLength && nextY - y > 0) {
       nextY = 1;
     }
 
