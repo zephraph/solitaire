@@ -1,5 +1,6 @@
 import { Suit, Rank } from "./components/Card";
 import { CardState } from "./state";
+import { useState } from "react";
 
 export function shuffle<T>(items: T[]) {
   let remaining = items.length;
@@ -25,4 +26,9 @@ export function generateDeck(shuffled: boolean = true) {
     }
   }
   return shuffled ? shuffle(deck) : deck;
+}
+
+export function useForceUpdate() {
+  const [value, setValue] = useState(true); // state
+  return () => setValue((value) => !value); // update the state to force render
 }
