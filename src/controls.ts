@@ -260,5 +260,11 @@ export const useSelectCardControls = () => {
     ) {
       moveCard();
     }
+
+    // Change what card is selected
+    else {
+      const newSelectedCard = clone(highlightedCard);
+      setSelectedCard(newSelectedCard);
+    }
   });
 };
