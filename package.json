@@ -1,12 +1,12 @@
 {
   "name": "@zephraph/solitaire",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Play solitaire in the terminal. `npx @zephraph/solitaire`",
-  "main": "game/index.js",
+  "main": "index.js",
   "repository": "https://github.com/zephraph/solitaire",
   "author": "Justin Bennett",
   "license": "MIT",
-  "bin": "game/index.js",
+  "bin": "index.js",
   "scripts": {
     "start": "node game",
     "build": "swc src -d game",
