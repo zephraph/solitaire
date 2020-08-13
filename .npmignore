@@ -1,0 +1,7 @@
+.swcrc
+src
+.vscode
+.gitignore
+layouts.monopic
+yarn.lock
+yarn-error.log

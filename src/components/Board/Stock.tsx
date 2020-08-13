@@ -12,33 +12,18 @@
 
 import React, { FC } from "react";
 import CardSlot from "../CardSlot";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { selectedState, stockState, wasteState } from "../../state";
-import Card from "../Card";
-import { useInput } from "ink";
+import { useRecoilValue } from "recoil";
+import { CardFaceDown } from "../Card";
+import { cardAreaState, highlightedAreaState } from "../../state";
 
 const Stock: FC = () => {
-  const [stock, setStock] = useRecoilState(stockState);
-  const [waste, setWaste] = useRecoilState(wasteState);
-  const [selected] = useRecoilValue(selectedState("stock"));
-
-  useInput((char) => {
-    if (selected && char === " ") {
-      if (stock.length > 0) {
-        const [cardBeingMoved, ...newStock] = stock;
-        setWaste([cardBeingMoved, ...waste]);
-        setStock(newStock);
-      } else {
-        setStock([...waste].reverse());
-        setWaste([]);
-      }
-    }
-  });
+  const stock = useRecoilValue(cardAreaState("stock"));
+  const highlighted = useRecoilValue(highlightedAreaState).area === "stock";
 
   return stock.length > 0 ? (
-    <Card {...stock[0]} faceUp={false} selected={selected} />
+    <CardFaceDown highlighted={highlighted} />
   ) : (
-    <CardSlot selected={selected} />
+    <CardSlot highlighted={highlighted} />
   );
 };
 

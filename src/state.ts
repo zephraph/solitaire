@@ -1,150 +1,170 @@
 import { atom, selector, DefaultValue, selectorFamily } from "recoil";
 import { Rank, Suit } from "./components/Card";
-import { generateDeck } from "./actions";
+import { generateDeck } from "./helpers";
+import clone from "lodash/cloneDeep";
+import findLast from "lodash/findLast";
+import { getTableauCardFromHighlight } from "./helpers";
 
-const deck = generateDeck();
+export type CardArea = "stock" | "waste" | "foundation" | "tableau";
 
 export interface CardState {
   rank: Rank;
   suit: Suit;
   faceUp: boolean;
+  area: CardArea;
+  position: number;
+  selected?: boolean;
 }
 
-export const stockState = atom<CardState[]>({
-  key: "stockState",
-  default: deck.splice(28),
+/**
+ * Represents the source of truth for all cards in the deck. Direct
+ * access to this state can simply actions such as movement on the board.
+ */
+export const deckState = atom<CardState[]>({
+  key: "deckState",
+  default: generateDeck().map((card, index) => {
+    if (index < 24) {
+      return {
+        ...card,
+        position: 0,
+        area: "stock",
+      };
+    }
+    const base = index - 23;
+    return {
+      ...card,
+      area: "tableau",
+      faceUp:
+        base === 1 ||
+        base === 3 ||
+        base === 6 ||
+        base === 10 ||
+        base === 15 ||
+        base === 21 ||
+        base === 28,
+      position:
+        base === 1
+          ? 0
+          : base <= 3
+          ? 1
+          : base <= 6
+          ? 2
+          : base <= 10
+          ? 3
+          : base <= 15
+          ? 4
+          : base <= 21
+          ? 5
+          : 6,
+    };
+  }),
 });
 
-export const wasteState = atom<CardState[]>({
-  key: "wasteState",
-  default: [],
-});
+export const cardAreaState = selectorFamily<CardState[], CardArea>({
+  key: "stackState",
+  get: (area) => ({ get }) =>
+    get(deckState).filter((card) => card.area === area),
+  set: (area) => ({ get, set }, newValue) => {
+    if (newValue instanceof DefaultValue) return;
 
-export const foundationState = atom<
-  [CardState[], CardState[], CardState[], CardState[]]
->({
-  key: "foundationState",
-  default: [[], [], [], []],
-});
-
-export const tableauState = atom<CardState[][]>({
-  key: "tableau",
-  default: Array(7)
-    .fill(undefined)
-    .map((_, i) => deck.splice(0, i + 1))
-    .map((stack, i) => {
-      stack[i].faceUp = true;
-      return stack;
-    }),
-});
-
-export type SelectionCoord = { x: number; y: number };
-
-const selectionCoords = atom<SelectionCoord>({
-  key: "activeCard",
-  default: { x: 0, y: 0 },
-});
-
-export const selectionState = selector<SelectionCoord>({
-  key: "selectionState",
-  get({ get }) {
-    return get(selectionCoords);
-  },
-  set({ get, set }, nextCard) {
-    if (nextCard instanceof DefaultValue) {
-      set(selectionCoords, { x: 0, y: 0 });
-      return;
-    }
-    const { x, y } = get(selectionCoords);
-    let nextX = nextCard.x;
-    let nextY = nextCard.y;
-
-    if (nextX < 0) {
-      nextX = 6;
-    } else if (nextX > 6) {
-      nextX = 0;
-    } else if (nextX === 2 && nextY === 0 && nextX - x > 0) {
-      nextX = 3;
-    } else if (nextX === 2 && nextY === 0 && nextX - x < 0) {
-      nextX = 1;
-    }
-
-    const columnLength = get(tableauState)[nextX].length;
-
-    if (nextX - x !== 0 && y > 0) {
-      nextY = columnLength;
-    }
-
-    if (nextX === 2 && y === 1 && nextY - y < 0) {
-      nextY = columnLength;
-    }
-
-    if (nextX === 2 && y === columnLength && nextY - y > 0) {
-      nextY = 1;
-    }
-
-    if (nextY < 0 || (nextY > columnLength + 1 && nextX !== nextCard.x)) {
-      nextY = columnLength;
-    }
-
-    if (nextY > columnLength) {
-      nextY = 0;
-    }
-
-    set(selectionCoords, { x: nextX, y: nextY });
+    set(
+      deckState,
+      clone(get(deckState))
+        .filter((card) => card.area !== area)
+        .concat(
+          clone(newValue).map((card) => {
+            card.area = area;
+            return card;
+          })
+        )
+    );
   },
 });
 
-type Stock = { area: "stock" };
-type Waste = { area: "waste" };
-type Foundation = { area: "foundation"; position: 0 | 1 | 2 | 3 };
-type Tableau = {
-  area: "tableau";
-  position: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  index: number;
+type CardStackLocation = {
+  area: CardArea;
+  position: number;
 };
-
-type SelectionArea = Stock | Waste | Foundation | Tableau;
-
-export const selectionAreaState = selector<SelectionArea>({
-  key: "selectionAreaState",
-  get({ get }) {
-    const { x, y } = get(selectionCoords);
-    if (x === 0 && y === 0) {
-      return { area: "stock" };
-    }
-    if (x === 1 && y === 0) {
-      return { area: "waste" };
-    }
-    if (y === 0) {
-      return { area: "foundation", position: x - 3 };
-    }
-    return { area: "tableau", position: x, index: y };
+export const cardStackState = selectorFamily<CardState[], CardStackLocation>({
+  key: "cardStackState",
+  get: (location) => ({ get }) => {
+    if (!location) return;
+    return get(cardAreaState(location.area)).filter(
+      (card) => card.position === location.position
+    );
+  },
+  set: (location) => ({ get, set }, newStackState) => {
+    if (!location) return;
+    const deck = clone(get(deckState));
+    set(
+      deckState,
+      deck
+        .filter(
+          (card) =>
+            !(
+              card.area === location.area && card.position === location.position
+            )
+        )
+        .concat(newStackState)
+    );
   },
 });
 
-export const selectedState = selectorFamily<boolean[], SelectionArea["area"]>({
-  key: "selectedState",
-  get: (area) => ({ get }) => {
-    const currentArea = get(selectionAreaState);
-    if (area === currentArea.area) {
-      if (currentArea.area === "stock" || currentArea.area === "waste") {
-        return [true];
-      }
-      if (currentArea.area === "foundation") {
-        return Array(4)
-          .fill(false)
-          .map((_, i) => (i === currentArea.position ? true : false));
-      }
-      if (currentArea.area === "tableau") {
-        const columnLength = get(tableauState)[currentArea.position].length;
-        const cols = Array(7);
-        cols[currentArea.position] = Array(columnLength || 1)
-          .fill(false)
-          .map((_, i) => i + 1 === currentArea.index);
-        return cols;
-      }
+export const selectedCardState = selector<CardState>({
+  key: "selectedCardState",
+  get: ({ get }) => get(deckState).find((card) => card.selected),
+  set: ({ get, set }, cardToSelect) => {
+    if (cardToSelect instanceof DefaultValue) return;
+
+    const deck: CardState[] = clone(get(deckState)).map((card: CardState) => ({
+      ...card,
+      selected: false,
+    }));
+    const selectedCardIndex = deck.findIndex(
+      (card) =>
+        card.rank === cardToSelect.rank && card.suit === cardToSelect.suit
+    );
+    deck.splice(selectedCardIndex, 1, { ...cardToSelect, selected: true });
+    set(deckState, deck);
+  },
+});
+
+export type HighlightedArea =
+  | { area: "stock" | "waste"; position: 0 }
+  | { area: "foundation"; position: number }
+  | { area: "tableau"; position: number; index: number };
+export const highlightedAreaState = atom<HighlightedArea>({
+  key: "highlightedAreaState",
+  default: { area: "stock", position: 0 },
+});
+
+export const highlightedCardState = selector<CardState>({
+  key: "highlightedCardState",
+  get: ({ get }) => {
+    const deck = get(deckState);
+    const highlighted = get(highlightedAreaState);
+    if (highlighted.area === "stock" || highlighted.area === "waste") {
+      return findLast(deck, (card) => card.area === highlighted.area);
     }
-    return [false];
+    if (highlighted.area === "foundation") {
+      return findLast(
+        deck,
+        (card) =>
+          card.area === "foundation" && card.position === highlighted.position
+      );
+    }
+    return getTableauCardFromHighlight(
+      deck.filter((card) => card.area === "tableau"),
+      highlighted
+    );
+  },
+  set: ({ get, set }, newValue) => {
+    if (newValue instanceof DefaultValue) return;
+    const deck = clone(get(deckState)) as CardState[];
+    const cardIndex = deck.findIndex(
+      (card) => card.suit === newValue.suit && card.rank === newValue.rank
+    );
+    deck[cardIndex] = newValue;
+    set(deckState, deck);
   },
 });

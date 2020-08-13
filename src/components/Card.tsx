@@ -29,16 +29,20 @@ export enum Suit {
 
 interface CardProps extends BoxProps {
   faceUp?: boolean;
+  highlighted?: boolean;
   selected?: boolean;
   rank: Rank;
   suit: Suit;
 }
 
 interface CardFaceDownProps extends BoxProps {
-  selected?: boolean;
+  highlighted?: boolean;
 }
-function CardFaceDown({ selected = false, ...boxProps }: CardFaceDownProps) {
-  const color = selected ? "yellow" : "blue";
+export function CardFaceDown({
+  highlighted = false,
+  ...boxProps
+}: CardFaceDownProps) {
+  const color = highlighted ? "yellow" : "blue";
   return (
     <Box
       borderStyle="round"
@@ -58,17 +62,24 @@ function CardFaceDown({ selected = false, ...boxProps }: CardFaceDownProps) {
 }
 
 function Card(props: CardProps) {
-  const { faceUp = false, rank, suit, selected = false, ...boxProps } = props;
+  const {
+    faceUp = false,
+    rank,
+    suit,
+    highlighted = false,
+    selected = false,
+    ...boxProps
+  } = props;
   const color = suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : null;
   return !faceUp ? (
-    <CardFaceDown selected={selected} {...boxProps} />
+    <CardFaceDown highlighted={highlighted} {...boxProps} />
   ) : (
     <Box
-      borderStyle="round"
+      borderStyle={selected ? "bold" : "round"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
       flexDirection="column"
-      borderColor={(selected && "yellow") || null}
+      borderColor={(highlighted && "yellow") || (selected && "green") || null}
       {...boxProps}
     >
       <Box>

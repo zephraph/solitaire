@@ -14,16 +14,34 @@ import React, { FC } from "react";
 import { Box } from "ink";
 import CardSlot from "../CardSlot";
 import { useRecoilValue } from "recoil";
-import { selectedState } from "../../state";
+import { highlightedAreaState, cardAreaState } from "../../state";
+import Card from "../Card";
+import last from "lodash/last";
 
 const Foundation: FC = () => {
-  const selected = useRecoilValue(selectedState("foundation"));
+  const foundation = useRecoilValue(cardAreaState("foundation"));
+  const highlighted = useRecoilValue(highlightedAreaState);
+  const sortedFoundation = Array.from({ length: 4 }, (_, position) =>
+    foundation.filter((card) => card.position === position)
+  );
+  const isHighlighted = (position: number) =>
+    highlighted.area === "foundation" && highlighted.position === position;
   return (
     <Box>
-      <CardSlot selected={selected[0]} />
-      <CardSlot selected={selected[1]} />
-      <CardSlot selected={selected[2]} />
-      <CardSlot selected={selected[3]} />
+      {sortedFoundation.map((stack, index) =>
+        stack.length === 0 ? (
+          <CardSlot
+            key={"foundation" + index}
+            highlighted={isHighlighted(index)}
+          />
+        ) : (
+          <Card
+            key={"foundation" + index}
+            {...last(stack)}
+            highlighted={isHighlighted(index)}
+          />
+        )
+      )}
     </Box>
   );
 };
