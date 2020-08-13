@@ -1,6 +1,6 @@
 {
   "name": "@zephraph/solitaire",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Play solitaire in the terminal. `npx @zephraph/solitaire`",
   "main": "index.js",
   "repository": "https://github.com/zephraph/solitaire",
