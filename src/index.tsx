@@ -13,7 +13,12 @@ function Game() {
   useStockControls();
   useSelectCardControls();
 
-  return <Board />;
+  return (
+    <>
+      <Text dimColor>↑ ← ↓ → to move, [space] to select</Text>
+      <Board />
+    </>
+  );
 }
 
 render(
