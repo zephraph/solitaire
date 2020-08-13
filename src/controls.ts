@@ -140,13 +140,15 @@ export const useStockControls = () => {
       card.highlighted = false;
       updateStock(newStock);
       updateWaste(
-        newWaste.concat(card).map((card) => ({ ...card, faceUp: true }))
+        newWaste
+          .concat(card)
+          .map((card) => ({ ...card, faceUp: true, selected: false }))
       );
     } else if (waste.length) {
       updateStock(
         clone(waste)
           .reverse()
-          .map((card) => ({ ...card, faceUp: false }))
+          .map((card) => ({ ...card, faceUp: false, selected: false }))
       );
       updateWaste([]);
     }
