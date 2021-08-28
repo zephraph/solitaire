@@ -4,7 +4,7 @@
   "description": "Play solitaire in the terminal. `npx @zephraph/solitaire`",
   "main": "index.js",
   "repository": "https://github.com/zephraph/solitaire",
-  "author": "Justin Bennett",
+  "author": "Justin Bennett <oss@just-be.dev>",
   "license": "MIT",
   "bin": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
     "build": "swc src -d game",
     "dev": "yarn build -w",
     "postinstall": "patch-package",
-    "prepack": "yarn build"
+    "prepack": "yarn build",
+    "release": "npx auto shipit"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.49",
