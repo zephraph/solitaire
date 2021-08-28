@@ -15,17 +15,17 @@
     "prepack": "yarn build"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.26",
-    "@swc/core": "^1.2.11",
-    "@types/react": "^16.9.44",
-    "chokidar": "^3.4.1"
+    "@swc/cli": "^0.1.49",
+    "@swc/core": "^1.2.83",
+    "@types/react": "^17.0.19",
+    "chokidar": "^3.5.2"
   },
   "dependencies": {
-    "ink": "^3.0.3",
-    "lodash": "^4.17.19",
-    "react": "^16.13.1",
-    "recoil": "^0.0.10",
-    "patch-package": "^6.2.2"
+    "ink": "^3.0.9",
+    "lodash": "^4.17.21",
+    "patch-package": "^6.2.2",
+    "react": "^17.0.2",
+    "recoil": "^0.0.10"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
