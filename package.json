@@ -11,6 +11,7 @@
     "start": "node game",
     "build": "swc src -d game",
     "dev": "yarn build -w",
+    "test": "echo 'no tests'",
     "postinstall": "patch-package",
     "prepack": "yarn build",
     "release": "npx auto shipit"
