@@ -13,19 +13,12 @@
 import React, { FC } from "react";
 import { Box } from "ink";
 import CardSlot from "../CardSlot";
-import { useRecoilValue } from "recoil";
-import { highlightedAreaState, cardAreaState } from "../../state";
+import { gameState } from "../../game";
 import Card from "../Card";
-import last from "lodash/last";
+import { useSnapshot } from "valtio";
 
 const Foundation: FC = () => {
-  const foundation = useRecoilValue(cardAreaState("foundation"));
-  const highlighted = useRecoilValue(highlightedAreaState);
-  const sortedFoundation = Array.from({ length: 4 }, (_, position) =>
-    foundation.filter((card) => card.position === position)
-  );
-  const isHighlighted = (position: number) =>
-    highlighted.area === "foundation" && highlighted.position === position;
+  const foundation = useSnapshot(gameState.foundation);
   return (
     <Box>
       {sortedFoundation.map((stack, index) =>
