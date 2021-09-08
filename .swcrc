@@ -1,15 +1,15 @@
 {
-	"jsc": {
-		"parser": {
-			"syntax": "typescript",
-			"tsx": true,
-			"decorators": false,
-			"dynamicImport": false
-		}
-	},
-	"module": {
-		"type": "commonjs",
-		"strict": false,
-		"strictMode": true
-	}
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "decorators": false,
+      "dynamicImport": false
+    }
+  },
+  "module": {
+    "type": "commonjs",
+    "strict": true,
+    "strictMode": true
+  }
 }

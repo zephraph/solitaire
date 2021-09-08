@@ -1,6 +1,3 @@
-import type { Card } from "./types";
-import { last } from "./utils";
-
 const MAX_INT = (2 ^ 31) - 1;
 
 export function randomInt() {
@@ -40,28 +37,30 @@ export function shuffle<T>(items: T[], seed: number) {
     items[remaining] = items[current];
     items[current] = temp;
   }
-
-  return items;
 }
 
-export function getTopCard(cardStack: Card[]) {
-  return {
-    index: cardStack.length > 0 ? cardStack.length - 1 : 0,
-    card: last(cardStack),
-  };
+export function enumKeys<O extends object, K extends keyof O = keyof O>(
+  obj: O
+): K[] {
+  return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
 }
 
-export function findFristFaceUpCard(cardStack: Card[]) {
-  for (let index = 0; index < cardStack.length; index++) {
-    if (cardStack[index].face === "up") {
-      return {
-        card: cardStack[index],
-        index,
-      };
+export function last<T>(arr: T[]) {
+  if (arr.length === 0) return undefined;
+  return arr[arr.length - 1];
+}
+
+export function shallowCompare<T extends Record<string, any>>(
+  obj1: T,
+  obj2: T
+) {
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+
+  for (let [key, value] of Object.entries(obj1)) {
+    if (obj2[key] !== value) {
+      return false;
     }
   }
-  return {
-    card: undefined,
-    index: 0,
-  };
+
+  return true;
 }
