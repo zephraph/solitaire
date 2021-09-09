@@ -1,9 +1,12 @@
 import keys from "mousetrap";
-import { moveLeft, moveRight, moveUp, moveDown } from "./actions";
-import { gameState } from "./game";
-import { getTopCard } from "./helpers";
+import {
+  shiftHighlightLeft,
+  shiftHighlightRight,
+  shiftHighlightUp,
+  shiftHightlightDown,
+} from "./actions";
 
-keys.bind("left", moveLeft);
-keys.bind("right", moveRight);
-keys.bind("up", moveUp);
-keys.bind("down", moveDown);
+keys.bind("left", shiftHighlightLeft);
+keys.bind("right", shiftHighlightRight);
+keys.bind("up", shiftHighlightUp);
+keys.bind("down", shiftHightlightDown);

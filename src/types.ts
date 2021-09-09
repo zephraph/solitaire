@@ -26,7 +26,7 @@ export enum Suit {
 export interface Card {
   rank: Rank;
   suit: Suit;
-  key: `${Rank}${Suit}`;
+  text: `${Rank}${Suit}`;
   face: "up" | "down";
 }
 

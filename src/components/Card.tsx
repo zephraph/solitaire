@@ -1,13 +1,15 @@
 import { Box, Text, Spacer, BoxProps } from "ink";
-import { Card as CardType, Rank, Suit } from "../types";
+import { memo } from "react";
+import { Card as CardType, Suit } from "../types";
 
 export const CARD_WIDTH = 10;
 export const CARD_HEIGHT = 7;
 
 interface CardProps extends CardType, BoxProps {
-  selected: boolean;
-  highlighted: boolean;
+  isHighlighted: boolean;
+  isSelected: boolean;
 }
+
 interface CardFaceDownProps extends BoxProps {
   highlighted?: boolean;
 }
@@ -34,51 +36,48 @@ export function CardFaceDown({
   );
 }
 
-function Card({
-  rank,
-  suit,
-  face,
-  highlighted,
-  selected,
-  ...boxProps
-}: CardProps) {
-  const color =
-    suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : undefined;
+export const Card = memo(
+  ({
+    rank,
+    suit,
+    text,
+    face,
+    isHighlighted,
+    isSelected,
+    ...boxProps
+  }: CardProps) => {
+    const color =
+      suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : undefined;
 
-  return face === "down" ? (
-    <CardFaceDown highlighted={highlighted} {...boxProps} />
-  ) : (
-    <Box
-      borderStyle={selected ? "bold" : "round"}
-      width={CARD_WIDTH}
-      height={CARD_HEIGHT}
-      flexDirection="column"
-      borderColor={
-        (highlighted && "yellow") || (selected && "green") || undefined
-      }
-      {...boxProps}
-    >
-      <Box>
-        <Text color={color}>
-          {rank}
-          {suit}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-        </Text>
+    return face === "down" ? (
+      <CardFaceDown highlighted={isHighlighted} {...boxProps} />
+    ) : (
+      <Box
+        borderStyle={isSelected ? "bold" : "round"}
+        width={CARD_WIDTH}
+        height={CARD_HEIGHT}
+        flexDirection="column"
+        borderColor={
+          (isHighlighted && "yellow") || (isSelected && "green") || undefined
+        }
+        {...boxProps}
+      >
+        <Box>
+          <Text color={color}>
+            {text}
+            {"      "}
+            {"      "}
+            {"      "}
+            {"      "}
+            {"      "}
+            {"      "}
+          </Text>
+        </Box>
+        <Spacer />
+        <Box justifyContent="flex-end">
+          <Text color={color}>{text}</Text>
+        </Box>
       </Box>
-      <Spacer />
-      <Box justifyContent="flex-end">
-        <Text color={color}>
-          {suit}
-          {rank}
-        </Text>
-      </Box>
-    </Box>
-  );
-}
-
-export default Card;
+    );
+  }
+);

@@ -29,6 +29,7 @@
     "ink": "^3.0.9",
     "lodash": "^4.17.21",
     "mousetrap": "^1.6.5",
+    "mutik": "^0.1.4",
     "patch-package": "^6.2.2",
     "react": "^0.0.0-experimental-031abd24b-20210907",
     "ts-union-tools": "^0.0.1",

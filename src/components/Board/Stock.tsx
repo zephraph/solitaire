@@ -10,20 +10,25 @@
 
 */
 
-import React, { FC } from "react";
-import CardSlot from "../CardSlot";
-import { useRecoilValue } from "recoil";
+import { FC } from "react";
+import { CardSlot } from "../CardSlot";
 import { CardFaceDown } from "../Card";
-import { cardAreaState, highlightedAreaState } from "../../state";
+import { GameState } from "../../game";
+import { getTopCard } from "../../helpers";
+import { useSelector } from "mutik";
+
+const isHighlightedSelector = (state: GameState) =>
+  state.highlighted.area === "stock";
+const stockCardSelector = (state: GameState) => getTopCard(state.stock);
 
 const Stock: FC = () => {
-  const stock = useRecoilValue(cardAreaState("stock"));
-  const highlighted = useRecoilValue(highlightedAreaState).area === "stock";
+  const { card } = useSelector(stockCardSelector);
+  const isHighlighted = useSelector(isHighlightedSelector);
 
-  return stock.length > 0 ? (
-    <CardFaceDown highlighted={highlighted} />
+  return card ? (
+    <CardFaceDown highlighted={isHighlighted} />
   ) : (
-    <CardSlot highlighted={highlighted} />
+    <CardSlot isHighlighted={isHighlighted} />
   );
 };
 

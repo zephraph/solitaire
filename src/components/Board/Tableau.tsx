@@ -10,67 +10,77 @@
  └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘             
 */
 
-import React, { FC, useState } from "react";
+import { FC } from "react";
 import { Box } from "ink";
-import CardSlot from "../CardSlot";
-import { useRecoilValue } from "recoil";
-import {
-  cardAreaState,
-  CardState,
-  highlightedAreaState,
-  HighlightedArea,
-} from "../../state";
-import Card from "../Card";
-import groupBy from "lodash/groupBy";
+import { CardSlot } from "../CardSlot";
+import { Card } from "../Card";
+import { GameState } from "../../game";
+import { CardHighlight, CardSelection } from "../../types";
+import { useSelector } from "mutik";
+
+const tableauSelector = (state: GameState) => state.tableau;
+const highlightedSelector = (state: GameState) =>
+  state.highlighted.area === "tableau" ? state.highlighted : undefined;
+
+const selectedSelector = (state: GameState) =>
+  state.selected?.area === "tableau" ? state.selected : undefined;
 
 const isHighlighted = (
-  highlighted: HighlightedArea,
+  highlighted: CardHighlight | undefined,
+  position: number,
+  index: number = 0
+) =>
+  highlighted
+    ? highlighted.position === position && highlighted.index === index
+    : false;
+
+const isSelected = (
+  selected: CardSelection | undefined,
   position: number,
   index: number
-) => {
-  if (highlighted.area !== "tableau") return false;
-  return highlighted.position === position && highlighted.index === index;
-};
+) =>
+  selected ? selected.position === position && selected.index === index : false;
 
 const Tableau: FC = () => {
-  const tableau = useRecoilValue(cardAreaState("tableau"));
-  const highlighted = useRecoilValue(highlightedAreaState);
-  const sortedTableau = Array.from({ length: 7 }, (_, position) =>
-    tableau.filter((card) => card.position === position)
-  );
+  const tableau = useSelector(tableauSelector);
+  const highlighted = useSelector(highlightedSelector);
+  const selected = useSelector(selectedSelector);
 
   return (
     <Box>
-      {sortedTableau.map((stack, stackIndex) => {
-        const stackEmpty = stack.length === 0;
-        return stackEmpty ? (
+      {tableau.map((stack, position) =>
+        stack.length === 0 ? (
           <CardSlot
-            key={"stack" + stackIndex}
-            highlighted={isHighlighted(highlighted, stackIndex, 0)}
+            key={`tableau-${position}`}
+            isHighlighted={isHighlighted(highlighted, position)}
           />
         ) : (
-          <Box flexDirection="column" key={"stack" + stackIndex}>
+          <Box flexDirection="column" key={"tableau-stack" + position}>
             {stack.map((card, cardIndex) => {
-              const { position, area, ...cardProps } = card;
               const offset =
-                cardIndex > 0 ? (stack[cardIndex - 1]?.faceUp ? -5 : -6) : 0;
+                cardIndex > 0
+                  ? stack[cardIndex - 1]?.face === "up"
+                    ? -5
+                    : -6
+                  : 0;
 
               return (
                 <Card
                   marginTop={offset}
-                  key={"sack" + stackIndex + "+card" + cardIndex}
-                  {...cardProps}
-                  highlighted={isHighlighted(
+                  key={"tableau-stack-" + position + "-card-" + cardIndex}
+                  {...card}
+                  isHighlighted={isHighlighted(
                     highlighted,
-                    stackIndex,
+                    position,
                     cardIndex
                   )}
+                  isSelected={isSelected(selected, position, cardIndex)}
                 />
               );
             })}
           </Box>
-        );
-      })}
+        )
+      )}
     </Box>
   );
 };

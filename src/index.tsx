@@ -1,18 +1,10 @@
-import React from "react";
-import { render, Text, Box } from "ink";
+import { render, Text } from "ink";
 import Board from "./components/Board";
-import { RecoilRoot, useRecoilValue } from "recoil";
-import {
-  useHighlightCardControls,
-  useSelectCardControls,
-  useStockControls,
-} from "./controls";
+import { Provider } from "mutik";
+import { gameState } from "./game";
+import React from "react";
 
 function Game() {
-  useHighlightCardControls();
-  useStockControls();
-  useSelectCardControls();
-
   return (
     <>
       <Text dimColor>↑ ← ↓ → to move, [space] to select</Text>
@@ -22,7 +14,7 @@ function Game() {
 }
 
 render(
-  <RecoilRoot>
+  <Provider store={gameState}>
     <Game />
-  </RecoilRoot>
+  </Provider>
 );

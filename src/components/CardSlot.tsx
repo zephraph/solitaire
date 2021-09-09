@@ -1,21 +1,19 @@
-import React from "react";
+import { memo } from "react";
 import { Box } from "ink";
 import { CARD_WIDTH, CARD_HEIGHT } from "./Card";
 
 interface CardSlotProps {
-  highlighted?: boolean;
+  isHighlighted?: boolean;
 }
 
-function CardSlot({ highlighted = false }: CardSlotProps) {
+export const CardSlot = memo(({ isHighlighted = false }: CardSlotProps) => {
   return (
     <Box
       borderStyle="single"
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
       flexDirection="column"
-      borderColor={highlighted ? "yellow" : "gray"}
+      borderColor={isHighlighted ? "yellow" : "gray"}
     ></Box>
   );
-}
-
-export default CardSlot;
+});

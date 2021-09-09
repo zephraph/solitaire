@@ -1,15 +1,15 @@
 import { enumKeys, last, randomInt, shuffle } from "./utils";
-import { proxy } from "valtio";
 import { CardSelection, CardHighlight, Card, Suit, Rank } from "./types";
+import { createStore } from "mutik";
 
-interface GameState {
+export interface GameState {
   readonly seed: number;
   selected?: CardSelection;
   highlighted: CardHighlight;
   stock: Card[];
   waste: Card[];
-  foundation: [Card[], Card[], Card[], Card[], Card[], Card[], Card[]];
-  tableau: [Card[], Card[], Card[], Card[]];
+  foundation: [Card[], Card[], Card[], Card[]];
+  tableau: [Card[], Card[], Card[], Card[], Card[], Card[], Card[]];
 }
 
 export const createInitialState = (seed: number = randomInt()): GameState => {
@@ -19,7 +19,7 @@ export const createInitialState = (seed: number = randomInt()): GameState => {
       deck.push({
         suit: Suit[suit],
         rank: Rank[rank],
-        key: `${Rank[rank]}${Suit[suit]}`,
+        text: `${Rank[rank]}${Suit[suit]}`,
         face: "down",
       });
     }
@@ -28,20 +28,20 @@ export const createInitialState = (seed: number = randomInt()): GameState => {
   shuffle(deck, seed);
 
   const stock = deck.splice(0, 23);
-  const foundation = Array(7)
+  const tableau = Array(7)
     .fill(null)
     .map((_, index) => {
-      const stack = deck.splice(0, index);
+      const stack = deck.splice(0, index + 1);
       last(stack)!.face = "up";
       return stack;
-    }) as GameState["foundation"];
+    }) as GameState["tableau"];
 
   return {
     seed,
     stock,
     waste: [],
-    tableau: [[], [], [], []],
-    foundation,
+    tableau,
+    foundation: [[], [], [], []],
     highlighted: {
       card: last(stock),
       area: "stock",
@@ -51,4 +51,4 @@ export const createInitialState = (seed: number = randomInt()): GameState => {
   };
 };
 
-export const gameState = proxy<GameState>(createInitialState());
+export const gameState = createStore<GameState>(createInitialState());
