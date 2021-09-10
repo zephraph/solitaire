@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Box } from "ink";
 import { CARD_WIDTH, CARD_HEIGHT } from "./Card";
+import React from "react";
 
 interface CardSlotProps {
   isHighlighted?: boolean;

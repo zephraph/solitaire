@@ -2,38 +2,37 @@
   "name": "@zephraph/solitaire",
   "version": "1.1.0",
   "description": "Play solitaire in the terminal. `npx @zephraph/solitaire`",
-  "main": "index.js",
+  "source": "src/index.tsx",
+  "main": "game/index.js",
   "repository": "https://github.com/zephraph/solitaire",
   "author": "Justin Bennett <oss@just-be.dev>",
   "license": "MIT",
   "bin": "index.js",
   "scripts": {
     "start": "node game",
-    "build": "swc src -d game",
-    "dev": "yarn build -w",
+    "build": "parcel build",
+    "watch": "parcel watch --no-hmr ",
     "test": "echo 'no tests'",
     "postinstall": "patch-package",
     "prepack": "yarn build",
     "release": "npx auto shipit"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.49",
-    "@swc/core": "^1.2.83",
     "@types/mousetrap": "^1.6.8",
     "@types/react": "^17.0.19",
     "chokidar": "^3.5.2",
+    "parcel": "^2.0.0-rc.0",
     "typescript": "^4.4.2"
   },
   "dependencies": {
-    "immer-reducer": "^0.7.13",
+    "@zephraph/mutik": "^1.0.0",
+    "esbuild": "^0.12.26",
+    "esbuild-register": "^3.0.0",
     "ink": "^3.0.9",
     "lodash": "^4.17.21",
-    "mousetrap": "^1.6.5",
-    "mutik": "^0.1.4",
     "patch-package": "^6.2.2",
-    "react": "^0.0.0-experimental-031abd24b-20210907",
-    "ts-union-tools": "^0.0.1",
-    "valtio": "^1.2.2"
+    "react": "^17.0.2",
+    "ts-union-tools": "^0.0.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

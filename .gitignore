@@ -2,3 +2,4 @@ node_modules
 game
 layouts.monopic
 yarn-error.log
+.parcel-cache

@@ -13,10 +13,10 @@
 import { FC } from "react";
 import { Box } from "ink";
 import { CardSlot } from "../CardSlot";
-import { GameState, gameState } from "../../game";
+import { GameState, useGameState } from "../../game";
 import { Card } from "../Card";
 import { getTopCard } from "../../helpers";
-import { useSelector } from "mutik";
+import React from "react";
 
 const foundationSelector = (state: GameState) =>
   state.foundation.map(getTopCard);
@@ -28,9 +28,9 @@ const selectedPositionSelector = (state: GameState) =>
   state.selected?.area === "foundation" ? state.selected.position : -1;
 
 const Foundation: FC = () => {
-  const foundation = useSelector(foundationSelector);
-  const highlightedPosition = useSelector(highlightedPositionSelector);
-  const selectedPosition = useSelector(selectedPositionSelector);
+  const foundation = useGameState(foundationSelector);
+  const highlightedPosition = useGameState(highlightedPositionSelector);
+  const selectedPosition = useGameState(selectedPositionSelector);
 
   return (
     <Box>

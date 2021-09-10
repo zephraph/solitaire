@@ -14,9 +14,9 @@ import { FC } from "react";
 import { Box } from "ink";
 import { CardSlot } from "../CardSlot";
 import { Card } from "../Card";
-import { GameState } from "../../game";
+import { GameState, useGameState } from "../../game";
 import { CardHighlight, CardSelection } from "../../types";
-import { useSelector } from "mutik";
+import React from "react";
 
 const tableauSelector = (state: GameState) => state.tableau;
 const highlightedSelector = (state: GameState) =>
@@ -42,9 +42,9 @@ const isSelected = (
   selected ? selected.position === position && selected.index === index : false;
 
 const Tableau: FC = () => {
-  const tableau = useSelector(tableauSelector);
-  const highlighted = useSelector(highlightedSelector);
-  const selected = useSelector(selectedSelector);
+  const tableau = useGameState(tableauSelector);
+  const highlighted = useGameState(highlightedSelector);
+  const selected = useGameState(selectedSelector);
 
   return (
     <Box>

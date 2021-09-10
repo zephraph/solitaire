@@ -1,6 +1,6 @@
 import { gameState, createInitialState } from "./game";
 import { findFristFaceUpCard, getTopCard } from "./helpers";
-import { CardHighlight, Card } from "./types";
+import { CardHighlight } from "./types";
 import { last } from "./utils";
 
 export function startNewGame(seed: number) {

@@ -1,6 +1,6 @@
 import { enumKeys, last, randomInt, shuffle } from "./utils";
 import { CardSelection, CardHighlight, Card, Suit, Rank } from "./types";
-import { createStore } from "mutik";
+import { createStore } from "@zephraph/mutik";
 
 export interface GameState {
   readonly seed: number;
@@ -51,4 +51,6 @@ export const createInitialState = (seed: number = randomInt()): GameState => {
   };
 };
 
-export const gameState = createStore<GameState>(createInitialState());
+export const [gameState, useGameState] = createStore<GameState>(
+  createInitialState()
+);

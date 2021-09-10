@@ -1,6 +1,7 @@
 import { Box, Text, Spacer, BoxProps } from "ink";
 import { memo } from "react";
 import { Card as CardType, Suit } from "../types";
+import React from "react";
 
 export const CARD_WIDTH = 10;
 export const CARD_HEIGHT = 7;

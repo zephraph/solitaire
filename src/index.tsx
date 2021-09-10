@@ -1,10 +1,10 @@
 import { render, Text } from "ink";
+import { useKeybindings } from "./controls";
 import Board from "./components/Board";
-import { Provider } from "mutik";
-import { gameState } from "./game";
 import React from "react";
 
 function Game() {
+  useKeybindings();
   return (
     <>
       <Text dimColor>↑ ← ↓ → to move, [space] to select</Text>
@@ -13,8 +13,9 @@ function Game() {
   );
 }
 
-render(
-  <Provider store={gameState}>
-    <Game />
-  </Provider>
-);
+const { waitUntilExit } = render(<Game />);
+
+(async () => {
+  console.log("await?");
+  await waitUntilExit();
+})();

@@ -13,17 +13,17 @@
 import { FC } from "react";
 import { CardSlot } from "../CardSlot";
 import { CardFaceDown } from "../Card";
-import { GameState } from "../../game";
+import { GameState, useGameState } from "../../game";
 import { getTopCard } from "../../helpers";
-import { useSelector } from "mutik";
+import React from "react";
 
 const isHighlightedSelector = (state: GameState) =>
   state.highlighted.area === "stock";
 const stockCardSelector = (state: GameState) => getTopCard(state.stock);
 
 const Stock: FC = () => {
-  const { card } = useSelector(stockCardSelector);
-  const isHighlighted = useSelector(isHighlightedSelector);
+  const { card } = useGameState(stockCardSelector);
+  const isHighlighted = useGameState(isHighlightedSelector);
 
   return card ? (
     <CardFaceDown highlighted={isHighlighted} />
