@@ -1,10 +1,22 @@
 import { gameState, createInitialState } from "./game";
-import { findFristFaceUpCard, getTopCard } from "./helpers";
-import { CardHighlight } from "./types";
-import { last } from "./utils";
+import {
+  findFristFaceUpCard,
+  getTopCard,
+  isOneAboveInRank,
+  isSameSuit,
+  isTopCard,
+} from "./helpers";
+import { CardHighlight, Rank } from "./types";
+import { last, randomInt } from "./utils";
 
-export function startNewGame(seed: number) {
-  Object.assign(gameState, createInitialState(seed));
+export function startNewGame(seed: number = randomInt()) {
+  gameState.set(() => createInitialState(seed));
+}
+
+export function deselectCard(): void {
+  gameState.mutate((state) => {
+    state.selected = undefined;
+  });
 }
 
 export function selectCard(): void {
@@ -12,10 +24,9 @@ export function selectCard(): void {
   // If highlighted card is selected, deselect the card
   if (selected?.card) {
     if (highlighted.card?.text === selected.card.text) {
-      gameState.mutate((state) => {
-        state.selected = undefined;
-      });
-      return;
+      return deselectCard();
+    } else {
+      moveCard();
     }
   }
 
@@ -34,11 +45,10 @@ export function selectCard(): void {
   }
 
   // If it's on the tableau, face down, and its the top card then flip the card
-  if (
-    highlighted.card.face === "down" &&
-    highlighted.card.text === last(tableau[highlighted.position])!.text
-  ) {
-    highlighted.card.face = "up";
+  if (highlighted.card.face === "down" && isTopCard(highlighted)) {
+    gameState.mutate((state) => {
+      state.highlighted.card!.face = "up";
+    });
     return;
   }
 
@@ -48,6 +58,29 @@ export function selectCard(): void {
       state.selected = highlighted as Required<CardHighlight>;
     });
     return;
+  }
+}
+
+function moveCard() {
+  const { selected, highlighted, tableau, foundation } = gameState.get();
+  if (!selected) return selectCard();
+  const movingFrom = selected.area;
+  const movingTo = highlighted.area;
+
+  if (movingFrom === "tableau" && movingTo === "foundation") {
+    if (highlighted.card) {
+    } else if (
+      selected.card.face === "up" &&
+      isTopCard(selected) &&
+      selected.card.rank === Rank.Ace
+    ) {
+      gameState.mutate((state) => {
+        let card = state.tableau[selected.position].pop()!;
+        state.foundation[highlighted.position].push(card);
+        state.selected = undefined;
+        state.highlighted.card = card;
+      });
+    }
   }
 }
 
@@ -228,7 +261,7 @@ export function shiftHighlightUp() {
             state.highlighted = {
               area: "foundation",
               position: position - 3,
-              ...getTopCard(state.foundation[position]),
+              ...getTopCard(state.foundation[position - 3]),
             };
           }
         } else {

@@ -1,6 +1,13 @@
 import { enumKeys, last, randomInt, shuffle } from "./utils";
 import { CardSelection, CardHighlight, Card, Suit, Rank } from "./types";
 import { createStore } from "@zephraph/mutik";
+import onExit from "signal-exit";
+
+import fs from "fs";
+import path from "path";
+import os from "os";
+
+const SAVE_PATH = path.join(os.tmpdir(), ".solitaire-data");
 
 export interface GameState {
   readonly seed: number;
@@ -54,3 +61,10 @@ export const createInitialState = (seed: number = randomInt()): GameState => {
 export const [gameState, useGameState] = createStore<GameState>(
   createInitialState()
 );
+
+onExit(() => {
+  fs.writeFileSync(SAVE_PATH, JSON.stringify(gameState.get()), "utf-8");
+});
+
+export const oldSave =
+  fs.existsSync(SAVE_PATH) && fs.readFileSync(SAVE_PATH, { encoding: "utf-8" });

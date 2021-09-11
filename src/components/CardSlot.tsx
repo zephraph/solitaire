@@ -4,10 +4,10 @@ import { CARD_WIDTH, CARD_HEIGHT } from "./Card";
 import React from "react";
 
 interface CardSlotProps {
-  isHighlighted?: boolean;
+  isHighlighted: boolean;
 }
 
-export const CardSlot = memo(({ isHighlighted = false }: CardSlotProps) => {
+export const CardSlot = memo(({ isHighlighted }: CardSlotProps) => {
   return (
     <Box
       borderStyle="single"

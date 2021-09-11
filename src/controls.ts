@@ -1,9 +1,11 @@
 import { useInput } from "ink";
 import {
+  selectCard,
   shiftHighlightLeft,
   shiftHighlightRight,
   shiftHighlightUp,
   shiftHightlightDown,
+  startNewGame,
 } from "./actions";
 
 export const useKeybindings = () => {
@@ -12,5 +14,7 @@ export const useKeybindings = () => {
     if (key.rightArrow) return shiftHighlightRight();
     if (key.downArrow) return shiftHightlightDown();
     if (key.upArrow) return shiftHighlightUp();
+    if (input === " ") return selectCard();
+    if (input === "n") return startNewGame();
   });
 };

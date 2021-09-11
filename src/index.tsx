@@ -13,9 +13,4 @@ function Game() {
   );
 }
 
-const { waitUntilExit } = render(<Game />);
-
-(async () => {
-  console.log("await?");
-  await waitUntilExit();
-})();
+render(<Game />);

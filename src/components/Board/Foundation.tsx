@@ -43,7 +43,7 @@ const Foundation: FC = () => {
             {...card}
           />
         ) : (
-          <CardSlot key={index} />
+          <CardSlot key={index} isHighlighted={highlightedPosition === index} />
         )
       )}
     </Box>
