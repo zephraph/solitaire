@@ -47,7 +47,7 @@ export function selectCard(): void {
   // If it's on the tableau, face down, and its the top card then flip the card
   if (highlighted.card.face === "down" && isTopCard(highlighted)) {
     gameState.mutate((state) => {
-      state.highlighted.card!.face = "up";
+      state.tableau[highlighted.position][highlighted.index].face = "up";
     });
     return;
   }
