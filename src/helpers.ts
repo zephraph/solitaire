@@ -20,10 +20,7 @@ export function findFristFaceUpCard(cardStack: Card[]) {
       };
     }
   }
-  return {
-    card: undefined,
-    index: 0,
-  };
+  return getTopCard(cardStack);
 }
 
 function rankToNumber(rank: Rank): number {
