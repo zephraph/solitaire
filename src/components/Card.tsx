@@ -1,5 +1,3 @@
-import React from "react";
-
 export const CARD_WIDTH = 10;
 export const CARD_HEIGHT = 7;
 
@@ -41,11 +39,12 @@ export function CardFaceDown({ highlighted = false }: CardFaceDownProps) {
   const color = highlighted ? "yellow" : "blue";
   return (
     <box
+      flexDirection="column"
       border
       borderStyle="rounded"
+      borderColor={highlighted ? "yellow" : "white"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      style={{ flexDirection: "column" }}
     >
       <text fg={color}>{"\u259A".repeat(8)}</text>
       <text fg={color}>{"\u259A".repeat(8)}</text>
@@ -56,7 +55,7 @@ export function CardFaceDown({ highlighted = false }: CardFaceDownProps) {
   );
 }
 
-function Card(props: CardProps) {
+export default function Card(props: CardProps) {
   const {
     faceUp = false,
     rank,
@@ -65,32 +64,26 @@ function Card(props: CardProps) {
     selected = false,
   } = props;
   const color =
-    suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : undefined;
+    suit === Suit.Hearts || suit === Suit.Diamonds ? "brightred" : undefined;
   return !faceUp ? (
     <CardFaceDown highlighted={highlighted} />
   ) : (
     <box
+      flexDirection="column"
+      justifyContent="space-between"
       border
-      borderStyle={selected ? "heavy" : "rounded"}
+      borderStyle="rounded"
+      borderColor={selected ? "cyan" : highlighted ? "yellow" : "white"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      style={{ flexDirection: "column" }}
+      backgroundColor="black"
     >
-      <box>
-        <text fg={color}>
-          {rank}
-          {suit}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-        </text>
-      </box>
-      <box style={{ flexGrow: 1 }} />
-      <box style={{ justifyContent: "flex-end" }}>
-        <text fg={color}>
+      <text fg={selected ? "cyan" : color}>
+        {rank}
+        {suit}
+      </text>
+      <box flexDirection="row" justifyContent="flex-end">
+        <text fg={selected ? "cyan" : color}>
           {suit}
           {rank}
         </text>
@@ -98,5 +91,3 @@ function Card(props: CardProps) {
     </box>
   );
 }
-
-export default Card;

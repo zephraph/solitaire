@@ -14,15 +14,15 @@ function Game() {
   useSelectCardControls();
 
   return (
-    <>
-      <text fg="dim">↑ ← ↓ → to move, [space] to select</text>
+    <box flexDirection="column" justifyContent="space-between" height="100%">
       <Board />
-    </>
+      <text>↑ ← ↓ → to move, [space] to select</text>
+    </box>
   );
 }
 
 render(
   <Provider>
     <Game />
-  </Provider>
+  </Provider>,
 );

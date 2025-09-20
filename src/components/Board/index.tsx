@@ -1,15 +1,12 @@
-import React, { FC } from "react";
 import Foundation from "./Foundation";
 import Stock from "./Stock";
 import Waste from "./Waste";
 import Tableau from "./Tableau";
 
-interface BoardProps {}
-
-const Board: FC<BoardProps> = () => {
+export default function () {
   return (
-    <box style={{ flexDirection: "column" }}>
-      <box style={{ marginBottom: 1 }}>
+    <box flexDirection="column">
+      <box flexDirection="row">
         <Stock />
         <Waste />
         <Foundation />
@@ -17,6 +14,4 @@ const Board: FC<BoardProps> = () => {
       <Tableau />
     </box>
   );
-};
-
-export default Board;
+}

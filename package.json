@@ -11,7 +11,7 @@
   "scripts": {
     "start": "bun game",
     "build": "tsc",
-    "dev": "bun build -w",
+    "dev": "bun --watch game",
     "test": "echo 'no tests'",
     "prepack": "bun build",
     "release": "bunx auto shipit"

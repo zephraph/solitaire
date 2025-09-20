@@ -18,7 +18,7 @@ import {
   useForceUpdate,
   isCardMovableToFoundation,
 } from "./helpers";
-import { cloneDeep as clone } from "es-toolkit";
+import { assert, cloneDeep as clone } from "es-toolkit";
 import { last } from "es-toolkit";
 import { Suit, Rank } from "./components/Card";
 
@@ -28,8 +28,10 @@ export const useHighlightCardControls = () => {
   useKeyboard((key) => {
     switch (highlighted.area) {
       case "stock":
-        if (key.name === "right") setHighlighted({ area: "waste", position: 0 });
-        if (key.name === "left") setHighlighted({ area: "foundation", position: 3 });
+        if (key.name === "right")
+          setHighlighted({ area: "waste", position: 0 });
+        if (key.name === "left")
+          setHighlighted({ area: "foundation", position: 3 });
         if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
@@ -40,7 +42,8 @@ export const useHighlightCardControls = () => {
 
       case "waste":
         if (key.name === "left") setHighlighted({ area: "stock", position: 0 });
-        if (key.name === "right") setHighlighted({ area: "foundation", position: 0 });
+        if (key.name === "right")
+          setHighlighted({ area: "foundation", position: 0 });
         if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
@@ -76,7 +79,7 @@ export const useHighlightCardControls = () => {
         if (key.name === "left" || key.name === "right") {
           const position = cyclePosition(
             key.name === "left" ? -1 : 1,
-            highlighted.position
+            highlighted.position,
           );
           setHighlighted({
             area: "tableau",
@@ -137,17 +140,18 @@ export const useStockControls = () => {
       const newStock = clone(stock);
       const newWaste = clone(waste);
       const card = newStock.pop();
+      assert(card, "Stock should not be empty");
       updateStock(newStock);
       updateWaste(
         newWaste
           .concat(card)
-          .map((card) => ({ ...card, faceUp: true, selected: false }))
+          .map((card) => ({ ...card, faceUp: true, selected: false })),
       );
     } else if (waste.length) {
       updateStock(
         clone(waste)
           .reverse()
-          .map((card) => ({ ...card, faceUp: false, selected: false }))
+          .map((card) => ({ ...card, faceUp: false, selected: false })),
       );
       updateWaste([]);
     }
@@ -157,26 +161,23 @@ export const useStockControls = () => {
 export const useSelectCardControls = () => {
   const forceUpdate = useForceUpdate();
   const highlightedArea = useAtomValue(highlightedAreaAtom);
-  const [highlightedCard, updateHighlightedCard] = useAtom(
-    highlightedCardAtom
-  );
+  const [highlightedCard, updateHighlightedCard] = useAtom(highlightedCardAtom);
   const [highlightedStack, updateHighlightedStack] = useAtom(
-    cardStackAtom(highlightedArea)
+    cardStackAtom(highlightedArea),
   );
   const [selectedCard, setSelectedCard] = useAtom(selectedCardAtom);
   const [selectedStack, updateSelectedStack] = useAtom(
-    cardStackAtom(selectedCard)
+    cardStackAtom(selectedCard),
   );
-  const [foundation, updateFoundation] = useAtom(
-    cardAreaAtom("foundation")
-  );
+  const [foundation, updateFoundation] = useAtom(cardAreaAtom("foundation"));
   const moveCard = () => {
+    if (!selectedCard) return;
     const selectedCardIndex = selectedStack.indexOf(selectedCard);
     const originStack = clone(selectedStack);
     const remainingStack = originStack.slice(0, selectedCardIndex);
     const movingStack = originStack.slice(selectedCardIndex);
     updateSelectedStack(
-      remainingStack.map((card) => ({ ...card, selected: false }))
+      remainingStack.map((card) => ({ ...card, selected: false })),
     );
 
     updateHighlightedStack([
@@ -209,7 +210,7 @@ export const useSelectCardControls = () => {
       ) {
         const newStack = clone(selectedStack);
         const cardToMove = {
-          ...newStack.pop(),
+          ...newStack.pop()!,
           ...highlightedArea,
           selected: false,
         };

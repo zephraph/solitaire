@@ -1,23 +1,22 @@
-/*                                                  
-                ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─               
-  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐│              
+/*
+                ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐│
   │   ││   │    ││   ││   ││   ││   │ ◀───Foundation
-  └───┘└───┘     └───┘└───┘└───┘└───┘│              
-                └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─               
-  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐               
-  │   ││   ││   ││   ││   ││   ││   │               
-  └───┘└───┘└───┘└───┘└───┘└───┘└───┘               
+  └───┘└───┘     └───┘└───┘└───┘└───┘│
+                └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐
+  │   ││   ││   ││   ││   ││   ││   │
+  └───┘└───┘└───┘└───┘└───┘└───┘└───┘
 
 */
 
-import React, { FC } from "react";
 import CardSlot from "../CardSlot";
 import { useAtomValue } from "jotai";
 import { highlightedAreaAtom, cardAreaAtom } from "../../store";
 import Card from "../Card";
 import { last } from "es-toolkit";
 
-const Foundation: FC = () => {
+function Foundation() {
   const foundation = useAtomValue(cardAreaAtom("foundation"));
   const highlighted = useAtomValue(highlightedAreaAtom);
   const sortedFoundation = Array.from({ length: 4 }, (_, position) =>
@@ -26,7 +25,7 @@ const Foundation: FC = () => {
   const isHighlighted = (position: number) =>
     highlighted.area === "foundation" && highlighted.position === position;
   return (
-    <box>
+    <box flexDirection="row">
       {sortedFoundation.map((stack, index) =>
         stack.length === 0 ? (
           <CardSlot highlighted={isHighlighted(index)} />
@@ -36,6 +35,6 @@ const Foundation: FC = () => {
       )}
     </box>
   );
-};
+}
 
 export default Foundation;

@@ -1,13 +1,13 @@
-/*                                                  
+/*
 
-  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐              
-  │   ││   │     │   ││   ││   ││   │              
-  └───┘└───┘     └───┘└───┘└───┘└───┘              
- ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐             
-  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐              
- ││   ││   ││   ││   ││   ││   ││   ││◀───Tableau  
-  └───┘└───┘└───┘└───┘└───┘└───┘└───┘              
- └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘             
+  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐
+  │   ││   │     │   ││   ││   ││   │
+  └───┘└───┘     └───┘└───┘└───┘└───┘
+ ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐
+ ││   ││   ││   ││   ││   ││   ││   ││◀───Tableau
+  └───┘└───┘└───┘└───┘└───┘└───┘└───┘
+ └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
 */
 
 import React, { FC, useState } from "react";
@@ -20,42 +20,38 @@ import {
   HighlightedArea,
 } from "../../store";
 import Card from "../Card";
-import { groupBy } from "es-toolkit";
 
 const isHighlighted = (
   highlighted: HighlightedArea,
   position: number,
-  index: number
+  index: number,
 ) => {
   if (highlighted.area !== "tableau") return false;
   return highlighted.position === position && highlighted.index === index;
 };
 
-const Tableau: FC = () => {
+export default function Tableau() {
   const tableau = useAtomValue(cardAreaAtom("tableau"));
   const highlighted = useAtomValue(highlightedAreaAtom);
   const sortedTableau = Array.from({ length: 7 }, (_, position) =>
-    tableau.filter((card) => card.position === position)
+    tableau.filter((card) => card.position === position),
   );
 
   return (
-    <box>
+    <box flexDirection="row">
       {sortedTableau.map((stack, stackIndex) => {
         const stackEmpty = stack.length === 0;
         return stackEmpty ? (
           <CardSlot highlighted={isHighlighted(highlighted, stackIndex, 0)} />
         ) : (
-          <box style={{ flexDirection: "column" }} key={"stack" + stackIndex}>
+          <box flexDirection="column" key={"stack" + stackIndex}>
             {stack.map((card, cardIndex) => {
               const { position, area, ...cardProps } = card;
               const offset =
                 cardIndex > 0 ? (stack[cardIndex - 1]?.faceUp ? -5 : -6) : 0;
 
               return (
-                <div
-                  style={{ marginTop: offset }}
-                  key={"sack" + stackIndex + "+card" + cardIndex}
-                >
+                <box style={{ marginTop: offset }}>
                   <Card
                     {...cardProps}
                     highlighted={isHighlighted(
@@ -64,7 +60,7 @@ const Tableau: FC = () => {
                       cardIndex,
                     )}
                   />
-                </div>
+                </box>
               );
             })}
           </box>
@@ -72,6 +68,4 @@ const Tableau: FC = () => {
       })}
     </box>
   );
-};
-
-export default Tableau;
+}

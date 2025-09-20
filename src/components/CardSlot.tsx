@@ -8,11 +8,12 @@ interface CardSlotProps {
 function CardSlot({ highlighted = false }: CardSlotProps) {
   return (
     <box
+      flexDirection="column"
       border
       borderStyle="single"
+      borderColor={highlighted ? "yellow" : "white"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      style={{ flexDirection: "column" }}
     ></box>
   );
 }
