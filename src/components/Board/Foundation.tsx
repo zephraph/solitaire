@@ -1,24 +1,22 @@
-/*                                                  
-                ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─               
-  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐│              
+/*
+                ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐│
   │   ││   │    ││   ││   ││   ││   │ ◀───Foundation
-  └───┘└───┘     └───┘└───┘└───┘└───┘│              
-                └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─               
-  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐               
-  │   ││   ││   ││   ││   ││   ││   │               
-  └───┘└───┘└───┘└───┘└───┘└───┘└───┘               
+  └───┘└───┘     └───┘└───┘└───┘└───┘│
+                └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐
+  │   ││   ││   ││   ││   ││   ││   │
+  └───┘└───┘└───┘└───┘└───┘└───┘└───┘
 
 */
 
-import React, { FC } from "react";
-import { Box } from "ink";
 import CardSlot from "../CardSlot";
 import { useAtomValue } from "jotai";
 import { highlightedAreaAtom, cardAreaAtom } from "../../store";
 import Card from "../Card";
 import { last } from "es-toolkit";
 
-const Foundation: FC = () => {
+function Foundation() {
   const foundation = useAtomValue(cardAreaAtom("foundation"));
   const highlighted = useAtomValue(highlightedAreaAtom);
   const sortedFoundation = Array.from({ length: 4 }, (_, position) =>
@@ -27,23 +25,16 @@ const Foundation: FC = () => {
   const isHighlighted = (position: number) =>
     highlighted.area === "foundation" && highlighted.position === position;
   return (
-    <Box>
+    <box flexDirection="row">
       {sortedFoundation.map((stack, index) =>
         stack.length === 0 ? (
-          <CardSlot
-            key={"foundation" + index}
-            highlighted={isHighlighted(index)}
-          />
+          <CardSlot highlighted={isHighlighted(index)} />
         ) : (
-          <Card
-            key={"foundation" + index}
-            {...last(stack)}
-            highlighted={isHighlighted(index)}
-          />
-        )
+          <Card {...last(stack)!} highlighted={isHighlighted(index)} />
+        ),
       )}
-    </Box>
+    </box>
   );
-};
+}
 
 export default Foundation;

@@ -1,5 +1,5 @@
 import React from "react";
-import { render, Text, Box } from "ink";
+import { render } from "@opentui/react";
 import { Provider } from "jotai";
 import Board from "./components/Board";
 import {
@@ -14,15 +14,15 @@ function Game() {
   useSelectCardControls();
 
   return (
-    <>
-      <Text dimColor>↑ ← ↓ → to move, [space] to select</Text>
+    <box flexDirection="column" justifyContent="space-between" height="100%">
       <Board />
-    </>
+      <text>↑ ← ↓ → to move, [space] to select</text>
+    </box>
   );
 }
 
 render(
   <Provider>
     <Game />
-  </Provider>
+  </Provider>,
 );

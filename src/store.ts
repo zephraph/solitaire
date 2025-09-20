@@ -1,12 +1,12 @@
-import { atom } from 'jotai';
-import { atomFamily } from 'jotai/utils';
-import { Rank, Suit } from './components/Card';
-import { generateDeck } from './helpers';
-import { cloneDeep as clone } from 'es-toolkit';
-import { findLast } from 'es-toolkit/compat';
-import { getTableauCardFromHighlight } from './helpers';
+import { atom } from "jotai";
+import { atomFamily } from "jotai/utils";
+import { Rank, Suit } from "./components/Card";
+import { generateDeck } from "./helpers";
+import { cloneDeep as clone } from "es-toolkit";
+import { findLast } from "es-toolkit/compat";
+import { getTableauCardFromHighlight } from "./helpers";
 
-export type CardArea = 'stock' | 'waste' | 'foundation' | 'tableau';
+export type CardArea = "stock" | "waste" | "foundation" | "tableau";
 
 export interface CardState {
   rank: Rank;
@@ -18,9 +18,9 @@ export interface CardState {
 }
 
 export type HighlightedArea =
-  | { area: 'stock' | 'waste'; position: 0 }
-  | { area: 'foundation'; position: number }
-  | { area: 'tableau'; position: number; index: number };
+  | { area: "stock" | "waste"; position: 0 }
+  | { area: "foundation"; position: number }
+  | { area: "tableau"; position: number; index: number };
 
 type CardStackLocation = {
   area: CardArea;
@@ -34,13 +34,13 @@ export const deckAtom = atom<CardState[]>(
       return {
         ...card,
         position: 0,
-        area: 'stock' as CardArea,
+        area: "stock" as CardArea,
       };
     }
     const base = index - 23;
     return {
       ...card,
-      area: 'tableau' as CardArea,
+      area: "tableau" as CardArea,
       faceUp:
         base === 1 ||
         base === 3 ||
@@ -64,12 +64,12 @@ export const deckAtom = atom<CardState[]>(
                     ? 5
                     : 6,
     };
-  })
+  }),
 );
 
 // Highlighted area atom
 export const highlightedAreaAtom = atom<HighlightedArea>({
-  area: 'stock',
+  area: "stock",
   position: 0,
 });
 
@@ -85,32 +85,32 @@ export const cardAreaAtom = atomFamily((area: CardArea) =>
         area,
       }));
       set(deckAtom, [...filteredDeck, ...updatedCards]);
-    }
-  )
+    },
+  ),
 );
 
 // Derived atom for card stacks
-export const cardStackAtom = atomFamily((location: CardStackLocation) =>
-  atom(
-    (get) => {
-      if (!location) return [];
-      return get(cardAreaAtom(location.area)).filter(
-        (card) => card.position === location.position
-      );
-    },
-    (get, set, newStackState: CardState[]) => {
-      if (!location) return;
-      const deck = clone(get(deckAtom));
-      const filteredDeck = deck.filter(
-        (card) =>
-          !(
-            card.area === location.area &&
-            card.position === location.position
-          )
-      );
-      set(deckAtom, [...filteredDeck, ...newStackState]);
-    }
-  )
+export const cardStackAtom = atomFamily(
+  (location: CardStackLocation | undefined) =>
+    atom(
+      (get) => {
+        if (!location) return [];
+        return get(cardAreaAtom(location.area)).filter(
+          (card) => card.position === location.position,
+        );
+      },
+      (get, set, newStackState: CardState[]) => {
+        if (!location) return;
+        const deck = clone(get(deckAtom));
+        const filteredDeck = deck.filter(
+          (card) =>
+            !(
+              card.area === location.area && card.position === location.position
+            ),
+        );
+        set(deckAtom, [...filteredDeck, ...newStackState]);
+      },
+    ),
 );
 
 // Selected card atom
@@ -125,7 +125,7 @@ export const selectedCardAtom = atom(
     if (cardToSelect) {
       const selectedCardIndex = deck.findIndex(
         (card) =>
-          card.rank === cardToSelect.rank && card.suit === cardToSelect.suit
+          card.rank === cardToSelect.rank && card.suit === cardToSelect.suit,
       );
       if (selectedCardIndex !== -1) {
         deck[selectedCardIndex] = { ...cardToSelect, selected: true };
@@ -133,7 +133,7 @@ export const selectedCardAtom = atom(
     }
 
     set(deckAtom, deck);
-  }
+  },
 );
 
 // Highlighted card atom
@@ -142,31 +142,31 @@ export const highlightedCardAtom = atom(
     const deck = get(deckAtom);
     const highlighted = get(highlightedAreaAtom);
 
-    if (highlighted.area === 'stock' || highlighted.area === 'waste') {
+    if (highlighted.area === "stock" || highlighted.area === "waste") {
       return findLast(deck, (card) => card.area === highlighted.area);
     }
 
-    if (highlighted.area === 'foundation') {
+    if (highlighted.area === "foundation") {
       return findLast(
         deck,
         (card) =>
-          card.area === 'foundation' && card.position === highlighted.position
+          card.area === "foundation" && card.position === highlighted.position,
       );
     }
 
     return getTableauCardFromHighlight(
-      deck.filter((card) => card.area === 'tableau'),
-      highlighted
+      deck.filter((card) => card.area === "tableau"),
+      highlighted,
     );
   },
   (get, set, newCard: CardState) => {
     const deck = clone(get(deckAtom));
     const cardIndex = deck.findIndex(
-      (card) => card.suit === newCard.suit && card.rank === newCard.rank
+      (card) => card.suit === newCard.suit && card.rank === newCard.rank,
     );
     if (cardIndex !== -1) {
       deck[cardIndex] = newCard;
       set(deckAtom, deck);
     }
-  }
+  },
 );

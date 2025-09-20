@@ -1,8 +1,8 @@
-import { CardState, HighlightedArea, CardArea } from "./store";
-import { Suit, Rank } from "./components/Card";
+import { CardState, HighlightedArea, CardArea } from "./store.js";
+import { Suit, Rank } from "./components/Card.js";
 import { useState } from "react";
 import { cloneDeep } from "es-toolkit";
-import { findIndex } from "es-toolkit";
+import { findIndex } from "es-toolkit/compat";
 import { isEqual } from "es-toolkit";
 
 export function shuffle<T>(items: T[]) {
@@ -23,11 +23,11 @@ export function shuffle<T>(items: T[]) {
 
 export function generateDeck(shuffled: boolean = true) {
   const deck: CardState[] = [];
-  for (let suit in Suit) {
-    for (let rank in Rank) {
+  for (let suit of Object.values(Suit)) {
+    for (let rank of Object.values(Rank)) {
       deck.push({
-        suit: Suit[suit],
-        rank: Rank[rank],
+        suit,
+        rank,
         faceUp: false,
         area: "stock",
         position: 0,
@@ -72,7 +72,7 @@ export function isOppositeSuit(card1: CardState, card2: CardState) {
 
 export function isCardMovableToTableau(
   cardForBase: CardState,
-  cardToMove: CardState
+  cardToMove: CardState,
 ) {
   if (!isOppositeSuit(cardForBase, cardToMove)) return false;
 
@@ -88,7 +88,7 @@ export function isCardMovableToTableau(
 
 export function isCardMovableToFoundation(
   cardForBase: CardState,
-  cardToMove: CardState
+  cardToMove: CardState,
 ) {
   if (cardForBase.suit !== cardToMove.suit) return false;
 
@@ -102,24 +102,27 @@ export function isCardMovableToFoundation(
 
 export function moveCardTo(
   cardToMove: CardState,
-  location: { area: "tableau" | "foundation"; position: number }
+  location: { area: "tableau" | "foundation"; position: number },
 ) {
   if (location.area === "tableau") {
   } else {
   }
 }
 
-export const getStackFromTableau = (tableau: CardState[], position) =>
+export const getStackFromTableau = (tableau: CardState[], position: number) =>
   tableau.filter((card) => card.position === position);
 
-export const getTopTableauCardIndex = (tableau: CardState[], position) => {
+export const getTopTableauCardIndex = (
+  tableau: CardState[],
+  position: number,
+) => {
   const stack = getStackFromTableau(tableau, position);
   return stack.length === 0 ? 0 : stack.length - 1;
 };
 
 export const getTableauCardFromHighlight = (
   tableau: CardState[],
-  highlight: HighlightedArea
+  highlight: HighlightedArea,
 ) => {
   if (highlight.area !== "tableau") return undefined;
   const stack = getStackFromTableau(tableau, highlight.position);
@@ -128,7 +131,7 @@ export const getTableauCardFromHighlight = (
 
 export const cardHasFaceUpCardsBelowIt = (
   stack: CardState[],
-  cardIndex: number
+  cardIndex: number,
 ) => {
   if (cardIndex < 1) return false;
   return stack[cardIndex - 1].faceUp;
@@ -136,7 +139,7 @@ export const cardHasFaceUpCardsBelowIt = (
 
 export const cardHasFaceUpCardsAboveIt = (
   stack: CardState[],
-  cardIndex: number
+  cardIndex: number,
 ) => {
   const topIndex = stack.length === 0 ? 0 : stack.length - 1;
   if (topIndex === 0 || topIndex === cardIndex) return false;

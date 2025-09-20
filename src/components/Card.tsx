@@ -1,6 +1,3 @@
-import React from "react";
-import { Box, Text, Spacer, BoxProps } from "ink";
-
 export const CARD_WIDTH = 10;
 export const CARD_HEIGHT = 7;
 
@@ -27,7 +24,7 @@ export enum Suit {
   Clubs = "♣",
 }
 
-interface CardProps extends BoxProps {
+interface CardProps {
   faceUp?: boolean;
   highlighted?: boolean;
   selected?: boolean;
@@ -35,74 +32,62 @@ interface CardProps extends BoxProps {
   suit: Suit;
 }
 
-interface CardFaceDownProps extends BoxProps {
+interface CardFaceDownProps {
   highlighted?: boolean;
 }
-export function CardFaceDown({
-  highlighted = false,
-  ...boxProps
-}: CardFaceDownProps) {
+export function CardFaceDown({ highlighted = false }: CardFaceDownProps) {
   const color = highlighted ? "yellow" : "blue";
   return (
-    <Box
-      borderStyle="round"
-      borderColor={color}
+    <box
+      flexDirection="column"
+      border
+      borderStyle="rounded"
+      borderColor={highlighted ? "yellow" : "white"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      flexDirection="column"
-      {...boxProps}
     >
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-    </Box>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+    </box>
   );
 }
 
-function Card(props: CardProps) {
+export default function Card(props: CardProps) {
   const {
     faceUp = false,
     rank,
     suit,
     highlighted = false,
     selected = false,
-    ...boxProps
   } = props;
-  const color = suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : null;
+  const color =
+    suit === Suit.Hearts || suit === Suit.Diamonds ? "brightred" : undefined;
   return !faceUp ? (
-    <CardFaceDown highlighted={highlighted} {...boxProps} />
+    <CardFaceDown highlighted={highlighted} />
   ) : (
-    <Box
-      borderStyle={selected ? "bold" : "round"}
+    <box
+      flexDirection="column"
+      justifyContent="space-between"
+      border
+      borderStyle="rounded"
+      borderColor={selected ? "cyan" : highlighted ? "yellow" : "white"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      flexDirection="column"
-      borderColor={(highlighted && "yellow") || (selected && "green") || null}
-      {...boxProps}
+      backgroundColor="black"
     >
-      <Box>
-        <Text color={color}>
-          {rank}
-          {suit}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-          {"      "}
-        </Text>
-      </Box>
-      <Spacer />
-      <Box justifyContent="flex-end">
-        <Text color={color}>
+      <text fg={selected ? "cyan" : color}>
+        {rank}
+        {suit}
+      </text>
+      <box flexDirection="row" justifyContent="flex-end">
+        <text fg={selected ? "cyan" : color}>
           {suit}
           {rank}
-        </Text>
-      </Box>
-    </Box>
+        </text>
+      </box>
+    </box>
   );
 }
-
-export default Card;

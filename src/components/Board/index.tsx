@@ -1,23 +1,17 @@
-import React, { FC } from "react";
-import { Box } from "ink";
 import Foundation from "./Foundation";
 import Stock from "./Stock";
 import Waste from "./Waste";
 import Tableau from "./Tableau";
 
-interface BoardProps {}
-
-const Board: FC<BoardProps> = () => {
+export default function () {
   return (
-    <Box flexDirection="column">
-      <Box marginBottom={1}>
+    <box flexDirection="column">
+      <box flexDirection="row">
         <Stock />
         <Waste />
         <Foundation />
-      </Box>
+      </box>
       <Tableau />
-    </Box>
+    </box>
   );
-};
-
-export default Board;
+}

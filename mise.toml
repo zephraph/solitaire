@@ -13,12 +13,15 @@ _.path = "node_modules/.bin"
 
 [tasks.start]
 run = "bun game"
+raw = true
+depends = ["build"]
 
 [tasks.build]
 run = "tsc"
 
 [tasks.dev]
-run = "bun build -w"
+run = "bun --watch game"
+raw = true
 
 [tasks.prepack]
 run = "bun build"

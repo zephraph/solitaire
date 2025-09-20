@@ -1,22 +1,22 @@
-/*                                               
+/*
 
-  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐            
-  │   ││   │     │   ││   ││   ││   │            
-  └─▲─┘└───┘     └───┘└───┘└───┘└───┘            
-    └────────────────────────────────────Stock   
-  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐            
-  │   ││   ││   ││   ││   ││   ││   │            
-  └───┘└───┘└───┘└───┘└───┘└───┘└───┘            
+  ┌───┐┌───┐     ┌───┐┌───┐┌───┐┌───┐
+  │   ││   │     │   ││   ││   ││   │
+  └─▲─┘└───┘     └───┘└───┘└───┘└───┘
+    └────────────────────────────────────Stock
+  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐
+  │   ││   ││   ││   ││   ││   ││   │
+  └───┘└───┘└───┘└───┘└───┘└───┘└───┘
 
 */
 
-import React, { FC } from "react";
+import React, { FC, JSX } from "react";
 import CardSlot from "../CardSlot";
 import { useAtomValue } from "jotai";
 import { CardFaceDown } from "../Card";
 import { cardAreaAtom, highlightedAreaAtom } from "../../store";
 
-const Stock: FC = () => {
+function Stock() {
   const stock = useAtomValue(cardAreaAtom("stock"));
   const highlighted = useAtomValue(highlightedAreaAtom).area === "stock";
 
@@ -25,6 +25,6 @@ const Stock: FC = () => {
   ) : (
     <CardSlot highlighted={highlighted} />
   );
-};
+}
 
 export default Stock;
