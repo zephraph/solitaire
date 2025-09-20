@@ -1,9 +1,8 @@
-import { CardState, HighlightedArea, CardArea } from "./store.js";
-import { Suit, Rank } from "./components/Card.js";
-import { useState } from "react";
-import { cloneDeep } from "es-toolkit";
+import { cloneDeep, isEqual } from "es-toolkit";
 import { findIndex } from "es-toolkit/compat";
-import { isEqual } from "es-toolkit";
+import { useState } from "react";
+import { Rank, Suit } from "./components/Card.js";
+import type { CardState, HighlightedArea } from "./store.js";
 
 export function shuffle<T>(items: T[]) {
   let remaining = items.length;
@@ -23,8 +22,8 @@ export function shuffle<T>(items: T[]) {
 
 export function generateDeck(shuffled: boolean = true) {
   const deck: CardState[] = [];
-  for (let suit of Object.values(Suit)) {
-    for (let rank of Object.values(Rank)) {
+  for (const suit of Object.values(Suit)) {
+    for (const rank of Object.values(Rank)) {
       deck.push({
         suit,
         rank,
@@ -44,7 +43,7 @@ export function useForceUpdate() {
 
 export function removeCardFromTableau(tableau: CardState[][], card: CardState) {
   const tableauClone = cloneDeep(tableau);
-  for (let stack of tableauClone) {
+  for (const stack of tableauClone) {
     const index = findIndex(stack, (c) => isEqual(c, card));
     if (index > -1) {
       stack.splice(index, 1);
@@ -70,10 +69,7 @@ export function isOppositeSuit(card1: CardState, card2: CardState) {
   }
 }
 
-export function isCardMovableToTableau(
-  cardForBase: CardState,
-  cardToMove: CardState,
-) {
+export function isCardMovableToTableau(cardForBase: CardState, cardToMove: CardState) {
   if (!isOppositeSuit(cardForBase, cardToMove)) return false;
 
   const ranks = Object.values(Rank);
@@ -86,10 +82,7 @@ export function isCardMovableToTableau(
   return true;
 }
 
-export function isCardMovableToFoundation(
-  cardForBase: CardState,
-  cardToMove: CardState,
-) {
+export function isCardMovableToFoundation(cardForBase: CardState, cardToMove: CardState) {
   if (cardForBase.suit !== cardToMove.suit) return false;
 
   const ranks = Object.values(Rank);
@@ -100,10 +93,7 @@ export function isCardMovableToFoundation(
   return true;
 }
 
-export function moveCardTo(
-  cardToMove: CardState,
-  location: { area: "tableau" | "foundation"; position: number },
-) {
+export function moveCardTo(_cardToMove: CardState, location: { area: "tableau" | "foundation"; position: number }) {
   if (location.area === "tableau") {
   } else {
   }
@@ -112,35 +102,23 @@ export function moveCardTo(
 export const getStackFromTableau = (tableau: CardState[], position: number) =>
   tableau.filter((card) => card.position === position);
 
-export const getTopTableauCardIndex = (
-  tableau: CardState[],
-  position: number,
-) => {
+export const getTopTableauCardIndex = (tableau: CardState[], position: number) => {
   const stack = getStackFromTableau(tableau, position);
   return stack.length === 0 ? 0 : stack.length - 1;
 };
 
-export const getTableauCardFromHighlight = (
-  tableau: CardState[],
-  highlight: HighlightedArea,
-) => {
+export const getTableauCardFromHighlight = (tableau: CardState[], highlight: HighlightedArea) => {
   if (highlight.area !== "tableau") return undefined;
   const stack = getStackFromTableau(tableau, highlight.position);
   return stack[highlight.index];
 };
 
-export const cardHasFaceUpCardsBelowIt = (
-  stack: CardState[],
-  cardIndex: number,
-) => {
+export const cardHasFaceUpCardsBelowIt = (stack: CardState[], cardIndex: number) => {
   if (cardIndex < 1) return false;
   return stack[cardIndex - 1].faceUp;
 };
 
-export const cardHasFaceUpCardsAboveIt = (
-  stack: CardState[],
-  cardIndex: number,
-) => {
+export const cardHasFaceUpCardsAboveIt = (stack: CardState[], cardIndex: number) => {
   const topIndex = stack.length === 0 ? 0 : stack.length - 1;
   if (topIndex === 0 || topIndex === cardIndex) return false;
   return stack[cardIndex + 1].faceUp;

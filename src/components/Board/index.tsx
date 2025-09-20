@@ -1,7 +1,7 @@
 import Foundation from "./Foundation";
 import Stock from "./Stock";
-import Waste from "./Waste";
 import Tableau from "./Tableau";
+import Waste from "./Waste";
 
 export default function () {
   return (

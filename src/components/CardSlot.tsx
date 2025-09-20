@@ -1,5 +1,4 @@
-import React from "react";
-import { CARD_WIDTH, CARD_HEIGHT } from "./Card";
+import { CARD_HEIGHT, CARD_WIDTH } from "./Card";
 
 interface CardSlotProps {
   highlighted?: boolean;
