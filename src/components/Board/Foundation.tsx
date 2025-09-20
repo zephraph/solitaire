@@ -27,9 +27,9 @@ function Foundation() {
     <box flexDirection="row">
       {sortedFoundation.map((stack, index) =>
         stack.length === 0 ? (
-          <CardSlot highlighted={isHighlighted(index)} />
+          <CardSlot key={`foundation-${index}`} highlighted={isHighlighted(index)} />
         ) : (
-          <Card {...last(stack)!} highlighted={isHighlighted(index)} />
+          <Card key={`foundation-${index}`} {...last(stack)} highlighted={isHighlighted(index)} />
         )
       )}
     </box>

@@ -176,7 +176,7 @@ export const useSelectCardControls = () => {
       ) {
         const newStack = clone(selectedStack);
         const cardToMove = {
-          ...newStack.pop()!,
+          ...(newStack.pop() ?? {}),
           ...highlightedArea,
           selected: false,
         };

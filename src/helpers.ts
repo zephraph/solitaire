@@ -6,8 +6,8 @@ import type { CardState, HighlightedArea } from "./store.js";
 
 export function shuffle<T>(items: T[]) {
   let remaining = items.length;
-  let current;
-  let temp;
+  let current: number;
+  let temp: T;
 
   while (remaining) {
     current = Math.floor(Math.random() * remaining--);

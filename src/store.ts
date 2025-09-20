@@ -91,7 +91,9 @@ export const selectedCardAtom = atom(
     const deck = clone(get(deckAtom));
 
     // Clear all selections first
-    deck.forEach((card) => (card.selected = false));
+    deck.forEach((card) => {
+      card.selected = false;
+    });
 
     if (cardToSelect) {
       const selectedCardIndex = deck.findIndex(
