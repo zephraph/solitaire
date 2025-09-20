@@ -8,13 +8,12 @@
   "license": "MIT",
   "bin": "index.js",
   "scripts": {
-    "start": "node game",
+    "start": "bun game",
     "build": "swc src -d game",
-    "dev": "yarn build -w",
+    "dev": "bun build -w",
     "test": "echo 'no tests'",
-    "postinstall": "patch-package",
-    "prepack": "yarn build",
-    "release": "npx auto shipit"
+    "prepack": "bun build",
+    "release": "bunx auto shipit"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.49",
