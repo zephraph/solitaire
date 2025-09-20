@@ -1,12 +1,12 @@
 import { useInput } from "ink";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
-  highlightedAreaState,
-  cardAreaState,
-  selectedCardState,
-  highlightedCardState,
-  cardStackState,
-} from "./state";
+  highlightedAreaAtom,
+  cardAreaAtom,
+  selectedCardAtom,
+  highlightedCardAtom,
+  cardStackAtom,
+} from "./store";
 import {
   getStackFromTableau,
   getTopTableauCardIndex,
@@ -23,8 +23,8 @@ import { last } from "es-toolkit";
 import { Suit, Rank } from "./components/Card";
 
 export const useHighlightCardControls = () => {
-  const [highlighted, setHighlighted] = useRecoilState(highlightedAreaState);
-  const tableau = useRecoilValue(cardAreaState("tableau"));
+  const [highlighted, setHighlighted] = useAtom(highlightedAreaAtom);
+  const tableau = useAtomValue(cardAreaAtom("tableau"));
   useInput((_, key) => {
     switch (highlighted.area) {
       case "stock":
@@ -127,9 +127,9 @@ export const useHighlightCardControls = () => {
 };
 
 export const useStockControls = () => {
-  const [stock, updateStock] = useRecoilState(cardAreaState("stock"));
-  const [waste, updateWaste] = useRecoilState(cardAreaState("waste"));
-  const highlighted = useRecoilValue(highlightedAreaState);
+  const [stock, updateStock] = useAtom(cardAreaAtom("stock"));
+  const [waste, updateWaste] = useAtom(cardAreaAtom("waste"));
+  const highlighted = useAtomValue(highlightedAreaAtom);
 
   useInput((input) => {
     if (input !== " " || highlighted.area !== "stock") return;
@@ -157,19 +157,19 @@ export const useStockControls = () => {
 
 export const useSelectCardControls = () => {
   const forceUpdate = useForceUpdate();
-  const highlightedArea = useRecoilValue(highlightedAreaState);
-  const [highlightedCard, updateHighlightedCard] = useRecoilState(
-    highlightedCardState
+  const highlightedArea = useAtomValue(highlightedAreaAtom);
+  const [highlightedCard, updateHighlightedCard] = useAtom(
+    highlightedCardAtom
   );
-  const [highlightedStack, updateHighlightedStack] = useRecoilState(
-    cardStackState(highlightedArea)
+  const [highlightedStack, updateHighlightedStack] = useAtom(
+    cardStackAtom(highlightedArea)
   );
-  const [selectedCard, setSelectedCard] = useRecoilState(selectedCardState);
-  const [selectedStack, updateSelectedStack] = useRecoilState(
-    cardStackState(selectedCard)
+  const [selectedCard, setSelectedCard] = useAtom(selectedCardAtom);
+  const [selectedStack, updateSelectedStack] = useAtom(
+    cardStackAtom(selectedCard)
   );
-  const [foundation, updateFoundation] = useRecoilState(
-    cardAreaState("foundation")
+  const [foundation, updateFoundation] = useAtom(
+    cardAreaAtom("foundation")
   );
   const moveCard = () => {
     const selectedCardIndex = selectedStack.indexOf(selectedCard);

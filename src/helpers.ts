@@ -1,4 +1,4 @@
-import { CardState, HighlightedArea, CardArea } from "./state";
+import { CardState, HighlightedArea, CardArea } from "./store";
 import { Suit, Rank } from "./components/Card";
 import { useState } from "react";
 import { cloneDeep } from "es-toolkit";

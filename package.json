@@ -22,11 +22,11 @@
     "chokidar": "^3.5.2"
   },
   "dependencies": {
+    "jotai": "^2.14.0",
     "ink": "^3.0.9",
     "lodash": "^4.17.21",
     "patch-package": "^6.2.2",
     "react": "^17.0.2",
-    "recoil": "^0.0.10"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

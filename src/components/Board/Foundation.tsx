@@ -13,16 +13,16 @@
 import React, { FC } from "react";
 import { Box } from "ink";
 import CardSlot from "../CardSlot";
-import { useRecoilValue } from "recoil";
-import { highlightedAreaState, cardAreaState } from "../../state";
+import { useAtomValue } from "jotai";
+import { highlightedAreaAtom, cardAreaAtom } from "../../store";
 import Card from "../Card";
 import { last } from "es-toolkit";
 
 const Foundation: FC = () => {
-  const foundation = useRecoilValue(cardAreaState("foundation"));
-  const highlighted = useRecoilValue(highlightedAreaState);
+  const foundation = useAtomValue(cardAreaAtom("foundation"));
+  const highlighted = useAtomValue(highlightedAreaAtom);
   const sortedFoundation = Array.from({ length: 4 }, (_, position) =>
-    foundation.filter((card) => card.position === position)
+    foundation.filter((card) => card.position === position),
   );
   const isHighlighted = (position: number) =>
     highlighted.area === "foundation" && highlighted.position === position;

@@ -13,13 +13,13 @@
 import React, { FC, useState } from "react";
 import { Box } from "ink";
 import CardSlot from "../CardSlot";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import {
-  cardAreaState,
+  cardAreaAtom,
   CardState,
-  highlightedAreaState,
+  highlightedAreaAtom,
   HighlightedArea,
-} from "../../state";
+} from "../../store";
 import Card from "../Card";
 import { groupBy } from "es-toolkit";
 
@@ -33,8 +33,8 @@ const isHighlighted = (
 };
 
 const Tableau: FC = () => {
-  const tableau = useRecoilValue(cardAreaState("tableau"));
-  const highlighted = useRecoilValue(highlightedAreaState);
+  const tableau = useAtomValue(cardAreaAtom("tableau"));
+  const highlighted = useAtomValue(highlightedAreaAtom);
   const sortedTableau = Array.from({ length: 7 }, (_, position) =>
     tableau.filter((card) => card.position === position)
   );
