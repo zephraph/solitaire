@@ -1,0 +1,12 @@
+[tools]
+bun = "1.2.22"
+
+[settings]
+experimental = true
+pin = true
+
+[hooks]
+postinstall = "bun install"
+
+[env]
+_.path = "node_modules/.bin"
