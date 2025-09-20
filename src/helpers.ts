@@ -1,5 +1,5 @@
-import { CardState, HighlightedArea, CardArea } from "./store";
-import { Suit, Rank } from "./components/Card";
+import { CardState, HighlightedArea, CardArea } from "./store.js";
+import { Suit, Rank } from "./components/Card.js";
 import { useState } from "react";
 import { cloneDeep } from "es-toolkit";
 import { findIndex } from "es-toolkit/compat";
@@ -109,10 +109,13 @@ export function moveCardTo(
   }
 }
 
-export const getStackFromTableau = (tableau: CardState[], position) =>
+export const getStackFromTableau = (tableau: CardState[], position: number) =>
   tableau.filter((card) => card.position === position);
 
-export const getTopTableauCardIndex = (tableau: CardState[], position) => {
+export const getTopTableauCardIndex = (
+  tableau: CardState[],
+  position: number,
+) => {
   const stack = getStackFromTableau(tableau, position);
   return stack.length === 0 ? 0 : stack.length - 1;
 };

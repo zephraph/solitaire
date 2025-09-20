@@ -28,9 +28,9 @@ export const useHighlightCardControls = () => {
   useKeyboard((key) => {
     switch (highlighted.area) {
       case "stock":
-        if (key === "ArrowRight") setHighlighted({ area: "waste", position: 0 });
-        if (key === "ArrowLeft") setHighlighted({ area: "foundation", position: 3 });
-        if (key === "ArrowDown" || key === "ArrowUp")
+        if (key.name === "right") setHighlighted({ area: "waste", position: 0 });
+        if (key.name === "left") setHighlighted({ area: "foundation", position: 3 });
+        if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
             position: 0,
@@ -39,9 +39,9 @@ export const useHighlightCardControls = () => {
         break;
 
       case "waste":
-        if (key === "ArrowLeft") setHighlighted({ area: "stock", position: 0 });
-        if (key === "ArrowRight") setHighlighted({ area: "foundation", position: 0 });
-        if (key === "ArrowDown" || key === "ArrowUp")
+        if (key.name === "left") setHighlighted({ area: "stock", position: 0 });
+        if (key.name === "right") setHighlighted({ area: "foundation", position: 0 });
+        if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
             position: 1,
@@ -50,20 +50,20 @@ export const useHighlightCardControls = () => {
         break;
 
       case "foundation":
-        if (key === "ArrowDown" || key === "ArrowUp")
+        if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
             position: highlighted.position + 3,
             index: getTopTableauCardIndex(tableau, highlighted.position + 3),
           });
-        if (key === "ArrowLeft")
+        if (key.name === "left")
           highlighted.position === 0
             ? setHighlighted({ area: "waste", position: 0 })
             : setHighlighted({
                 area: "foundation",
                 position: highlighted.position - 1,
               });
-        if (key === "ArrowRight")
+        if (key.name === "right")
           highlighted.position === 3
             ? setHighlighted({ area: "stock", position: 0 })
             : setHighlighted({
@@ -73,9 +73,9 @@ export const useHighlightCardControls = () => {
         break;
 
       case "tableau":
-        if (key === "ArrowLeft" || key === "ArrowRight") {
+        if (key.name === "left" || key.name === "right") {
           const position = cyclePosition(
-            key === "ArrowLeft" ? -1 : 1,
+            key.name === "left" ? -1 : 1,
             highlighted.position
           );
           setHighlighted({
@@ -87,7 +87,7 @@ export const useHighlightCardControls = () => {
         }
         const stack = getStackFromTableau(tableau, highlighted.position);
         if (
-          key === "ArrowUp" &&
+          key.name === "up" &&
           cardHasFaceUpCardsBelowIt(stack, highlighted.index)
         ) {
           setHighlighted({
@@ -96,7 +96,7 @@ export const useHighlightCardControls = () => {
             index: highlighted.index - 1,
           });
         } else if (
-          key === "ArrowDown" &&
+          key.name === "down" &&
           cardHasFaceUpCardsAboveIt(stack, highlighted.index)
         ) {
           setHighlighted({
@@ -104,7 +104,7 @@ export const useHighlightCardControls = () => {
             position: highlighted.position,
             index: highlighted.index + 1,
           });
-        } else if (key === "ArrowUp" || key === "ArrowDown") {
+        } else if (key.name === "up" || key.name === "down") {
           if (highlighted.position === 0)
             setHighlighted({ area: "stock", position: 0 });
           else if (highlighted.position === 1)
@@ -132,12 +132,11 @@ export const useStockControls = () => {
   const highlighted = useAtomValue(highlightedAreaAtom);
 
   useKeyboard((key) => {
-    if (key !== " " || highlighted.area !== "stock") return;
+    if (key.name !== "space" || highlighted.area !== "stock") return;
     if (stock.length) {
       const newStock = clone(stock);
       const newWaste = clone(waste);
       const card = newStock.pop();
-      card.highlighted = false;
       updateStock(newStock);
       updateWaste(
         newWaste
@@ -191,7 +190,7 @@ export const useSelectCardControls = () => {
     ]);
   };
   useKeyboard((key) => {
-    if (key !== " " || highlightedArea.area === "stock") return;
+    if (key.name !== "space" || highlightedArea.area === "stock") return;
 
     // Move card to empty space
     if (selectedCard && !highlightedCard) {
