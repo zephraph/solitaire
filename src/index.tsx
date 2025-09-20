@@ -1,5 +1,5 @@
 import React from "react";
-import { render, Text, Box } from "ink";
+import { render } from "@opentui/react";
 import { Provider } from "jotai";
 import Board from "./components/Board";
 import {
@@ -15,7 +15,7 @@ function Game() {
 
   return (
     <>
-      <Text dimColor>↑ ← ↓ → to move, [space] to select</Text>
+      <text fg="dim">↑ ← ↓ → to move, [space] to select</text>
       <Board />
     </>
   );

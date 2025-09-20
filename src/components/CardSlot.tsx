@@ -1,5 +1,4 @@
 import React from "react";
-import { Box } from "ink";
 import { CARD_WIDTH, CARD_HEIGHT } from "./Card";
 
 interface CardSlotProps {
@@ -8,13 +7,13 @@ interface CardSlotProps {
 
 function CardSlot({ highlighted = false }: CardSlotProps) {
   return (
-    <Box
+    <box
+      border
       borderStyle="single"
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      flexDirection="column"
-      borderColor={highlighted ? "yellow" : "gray"}
-    ></Box>
+      style={{ flexDirection: "column" }}
+    ></box>
   );
 }
 

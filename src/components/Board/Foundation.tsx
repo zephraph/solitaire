@@ -11,7 +11,6 @@
 */
 
 import React, { FC } from "react";
-import { Box } from "ink";
 import CardSlot from "../CardSlot";
 import { useAtomValue } from "jotai";
 import { highlightedAreaAtom, cardAreaAtom } from "../../store";
@@ -27,22 +26,15 @@ const Foundation: FC = () => {
   const isHighlighted = (position: number) =>
     highlighted.area === "foundation" && highlighted.position === position;
   return (
-    <Box>
+    <box>
       {sortedFoundation.map((stack, index) =>
         stack.length === 0 ? (
-          <CardSlot
-            key={"foundation" + index}
-            highlighted={isHighlighted(index)}
-          />
+          <CardSlot highlighted={isHighlighted(index)} />
         ) : (
-          <Card
-            key={"foundation" + index}
-            {...last(stack)}
-            highlighted={isHighlighted(index)}
-          />
-        )
+          <Card {...last(stack)!} highlighted={isHighlighted(index)} />
+        ),
       )}
-    </Box>
+    </box>
   );
 };
 

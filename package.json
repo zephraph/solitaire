@@ -2,6 +2,7 @@
   "name": "@zephraph/solitaire",
   "version": "1.1.0",
   "description": "Play solitaire in the terminal. `npx @zephraph/solitaire`",
+  "type": "module",
   "main": "index.js",
   "repository": "https://github.com/zephraph/solitaire",
   "author": "Justin Bennett <oss@just-be.dev>",
@@ -16,16 +17,17 @@
     "release": "bunx auto shipit"
   },
   "devDependencies": {
+    "@types/react": "^19.1.13",
     "chokidar": "^3.5.2",
     "typescript": "^5.9.2"
-    "@types/react": "^17.0.19",
   },
   "dependencies": {
+    "@opentui/core": "^0.1.24",
+    "@opentui/react": "^0.1.24",
+    "es-toolkit": "^1.39.10",
     "jotai": "^2.14.0",
-    "ink": "^3.0.9",
-    "lodash": "^4.17.21",
     "patch-package": "^6.2.2",
-    "react": "^17.0.2",
+    "react": "^19.1.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

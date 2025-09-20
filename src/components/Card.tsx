@@ -1,5 +1,4 @@
 import React from "react";
-import { Box, Text, Spacer, BoxProps } from "ink";
 
 export const CARD_WIDTH = 10;
 export const CARD_HEIGHT = 7;
@@ -27,7 +26,7 @@ export enum Suit {
   Clubs = "♣",
 }
 
-interface CardProps extends BoxProps {
+interface CardProps {
   faceUp?: boolean;
   highlighted?: boolean;
   selected?: boolean;
@@ -35,29 +34,25 @@ interface CardProps extends BoxProps {
   suit: Suit;
 }
 
-interface CardFaceDownProps extends BoxProps {
+interface CardFaceDownProps {
   highlighted?: boolean;
 }
-export function CardFaceDown({
-  highlighted = false,
-  ...boxProps
-}: CardFaceDownProps) {
+export function CardFaceDown({ highlighted = false }: CardFaceDownProps) {
   const color = highlighted ? "yellow" : "blue";
   return (
-    <Box
-      borderStyle="round"
-      borderColor={color}
+    <box
+      border
+      borderStyle="rounded"
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      flexDirection="column"
-      {...boxProps}
+      style={{ flexDirection: "column" }}
     >
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-      <Text color={color}>▚▚▚▚▚▚▚▚</Text>
-    </Box>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+      <text fg={color}>{"\u259A".repeat(8)}</text>
+    </box>
   );
 }
 
@@ -68,22 +63,21 @@ function Card(props: CardProps) {
     suit,
     highlighted = false,
     selected = false,
-    ...boxProps
   } = props;
-  const color = suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : null;
+  const color =
+    suit === Suit.Hearts || suit === Suit.Diamonds ? "red" : undefined;
   return !faceUp ? (
-    <CardFaceDown highlighted={highlighted} {...boxProps} />
+    <CardFaceDown highlighted={highlighted} />
   ) : (
-    <Box
-      borderStyle={selected ? "bold" : "round"}
+    <box
+      border
+      borderStyle={selected ? "heavy" : "rounded"}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
-      flexDirection="column"
-      borderColor={(highlighted && "yellow") || (selected && "green") || null}
-      {...boxProps}
+      style={{ flexDirection: "column" }}
     >
-      <Box>
-        <Text color={color}>
+      <box>
+        <text fg={color}>
           {rank}
           {suit}
           {"      "}
@@ -92,16 +86,16 @@ function Card(props: CardProps) {
           {"      "}
           {"      "}
           {"      "}
-        </Text>
-      </Box>
-      <Spacer />
-      <Box justifyContent="flex-end">
-        <Text color={color}>
+        </text>
+      </box>
+      <box style={{ flexGrow: 1 }} />
+      <box style={{ justifyContent: "flex-end" }}>
+        <text fg={color}>
           {suit}
           {rank}
-        </Text>
-      </Box>
-    </Box>
+        </text>
+      </box>
+    </box>
   );
 }
 

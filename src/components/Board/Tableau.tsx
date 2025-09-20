@@ -11,7 +11,6 @@
 */
 
 import React, { FC, useState } from "react";
-import { Box } from "ink";
 import CardSlot from "../CardSlot";
 import { useAtomValue } from "jotai";
 import {
@@ -40,38 +39,38 @@ const Tableau: FC = () => {
   );
 
   return (
-    <Box>
+    <box>
       {sortedTableau.map((stack, stackIndex) => {
         const stackEmpty = stack.length === 0;
         return stackEmpty ? (
-          <CardSlot
-            key={"stack" + stackIndex}
-            highlighted={isHighlighted(highlighted, stackIndex, 0)}
-          />
+          <CardSlot highlighted={isHighlighted(highlighted, stackIndex, 0)} />
         ) : (
-          <Box flexDirection="column" key={"stack" + stackIndex}>
+          <box style={{ flexDirection: "column" }} key={"stack" + stackIndex}>
             {stack.map((card, cardIndex) => {
               const { position, area, ...cardProps } = card;
               const offset =
                 cardIndex > 0 ? (stack[cardIndex - 1]?.faceUp ? -5 : -6) : 0;
 
               return (
-                <Card
-                  marginTop={offset}
+                <div
+                  style={{ marginTop: offset }}
                   key={"sack" + stackIndex + "+card" + cardIndex}
-                  {...cardProps}
-                  highlighted={isHighlighted(
-                    highlighted,
-                    stackIndex,
-                    cardIndex
-                  )}
-                />
+                >
+                  <Card
+                    {...cardProps}
+                    highlighted={isHighlighted(
+                      highlighted,
+                      stackIndex,
+                      cardIndex,
+                    )}
+                  />
+                </div>
               );
             })}
-          </Box>
+          </box>
         );
       })}
-    </Box>
+    </box>
   );
 };
 
