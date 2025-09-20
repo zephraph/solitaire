@@ -9,17 +9,16 @@
   "bin": "index.js",
   "scripts": {
     "start": "bun game",
-    "build": "swc src -d game",
+    "build": "tsc",
     "dev": "bun build -w",
     "test": "echo 'no tests'",
     "prepack": "bun build",
     "release": "bunx auto shipit"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.49",
-    "@swc/core": "^1.2.83",
+    "chokidar": "^3.5.2",
+    "typescript": "^5.9.2"
     "@types/react": "^17.0.19",
-    "chokidar": "^3.5.2"
   },
   "dependencies": {
     "jotai": "^2.14.0",
