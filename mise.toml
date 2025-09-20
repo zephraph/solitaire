@@ -10,3 +10,18 @@ postinstall = "bun install"
 
 [env]
 _.path = "node_modules/.bin"
+
+[tasks.start]
+run = "bun game"
+
+[tasks.build]
+run = "swc src -d game"
+
+[tasks.dev]
+run = "bun build -w"
+
+[tasks.prepack]
+run = "bun build"
+
+[tasks.release]
+run = "bunx auto shipit"
