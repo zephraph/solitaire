@@ -1,7 +1,7 @@
 import React from "react";
 import { render, Text, Box } from "ink";
+import { Provider } from "jotai";
 import Board from "./components/Board";
-import { RecoilRoot, useRecoilValue } from "recoil";
 import {
   useHighlightCardControls,
   useSelectCardControls,
@@ -22,7 +22,7 @@ function Game() {
 }
 
 render(
-  <RecoilRoot>
+  <Provider>
     <Game />
-  </RecoilRoot>
+  </Provider>
 );
