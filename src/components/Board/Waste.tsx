@@ -16,7 +16,7 @@ import { useRecoilValue } from "recoil";
 import { cardAreaState, highlightedAreaState } from "../../state";
 import Card, { CARD_WIDTH } from "../Card";
 import { Box } from "ink";
-import last from "lodash/last";
+import { last } from "es-toolkit";
 
 export default function Waste() {
   const waste = useRecoilValue(cardAreaState("waste"));

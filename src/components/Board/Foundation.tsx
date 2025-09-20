@@ -16,7 +16,7 @@ import CardSlot from "../CardSlot";
 import { useRecoilValue } from "recoil";
 import { highlightedAreaState, cardAreaState } from "../../state";
 import Card from "../Card";
-import last from "lodash/last";
+import { last } from "es-toolkit";
 
 const Foundation: FC = () => {
   const foundation = useRecoilValue(cardAreaState("foundation"));

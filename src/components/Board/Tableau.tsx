@@ -21,7 +21,7 @@ import {
   HighlightedArea,
 } from "../../state";
 import Card from "../Card";
-import groupBy from "lodash/groupBy";
+import { groupBy } from "es-toolkit";
 
 const isHighlighted = (
   highlighted: HighlightedArea,
