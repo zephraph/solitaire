@@ -18,8 +18,8 @@ import {
   useForceUpdate,
   isCardMovableToFoundation,
 } from "./helpers";
-import clone from "lodash/cloneDeep";
-import last from "lodash/last";
+import { cloneDeep as clone } from "es-toolkit";
+import { last } from "es-toolkit";
 import { Suit, Rank } from "./components/Card";
 
 export const useHighlightCardControls = () => {

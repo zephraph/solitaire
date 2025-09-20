@@ -1,8 +1,8 @@
 import { atom, selector, DefaultValue, selectorFamily } from "recoil";
 import { Rank, Suit } from "./components/Card";
 import { generateDeck } from "./helpers";
-import clone from "lodash/cloneDeep";
-import findLast from "lodash/findLast";
+import { cloneDeep as clone } from "es-toolkit";
+import { findLast } from "es-toolkit";
 import { getTableauCardFromHighlight } from "./helpers";
 
 export type CardArea = "stock" | "waste" | "foundation" | "tableau";

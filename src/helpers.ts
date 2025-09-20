@@ -1,9 +1,9 @@
 import { CardState, HighlightedArea, CardArea } from "./state";
 import { Suit, Rank } from "./components/Card";
 import { useState } from "react";
-import cloneDeep from "lodash/cloneDeep";
-import findIndex from "lodash/findIndex";
-import isEqual from "lodash/isEqual";
+import { cloneDeep } from "es-toolkit";
+import { findIndex } from "es-toolkit";
+import { isEqual } from "es-toolkit";
 
 export function shuffle<T>(items: T[]) {
   let remaining = items.length;
