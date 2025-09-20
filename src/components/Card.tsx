@@ -56,15 +56,8 @@ export function CardFaceDown({ highlighted = false }: CardFaceDownProps) {
 }
 
 export default function Card(props: CardProps) {
-  const {
-    faceUp = false,
-    rank,
-    suit,
-    highlighted = false,
-    selected = false,
-  } = props;
-  const color =
-    suit === Suit.Hearts || suit === Suit.Diamonds ? "brightred" : undefined;
+  const { faceUp = false, rank, suit, highlighted = false, selected = false } = props;
+  const color = suit === Suit.Hearts || suit === Suit.Diamonds ? "brightred" : undefined;
   return !faceUp ? (
     <CardFaceDown highlighted={highlighted} />
   ) : (

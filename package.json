@@ -13,10 +13,13 @@
     "build": "tsc",
     "dev": "bun --watch game",
     "test": "echo 'no tests'",
+    "format": "biome format --write .",
+    "lint": "biome check --write .",
     "prepack": "bun build",
     "release": "bunx auto shipit"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
     "@types/react": "^19.1.13",
     "chokidar": "^3.5.2",
     "typescript": "^5.9.2"

@@ -1,12 +1,7 @@
-import React from "react";
 import { render } from "@opentui/react";
 import { Provider } from "jotai";
 import Board from "./components/Board";
-import {
-  useHighlightCardControls,
-  useSelectCardControls,
-  useStockControls,
-} from "./controls";
+import { useHighlightCardControls, useSelectCardControls, useStockControls } from "./controls";
 
 function Game() {
   useHighlightCardControls();
@@ -24,5 +19,5 @@ function Game() {
 render(
   <Provider>
     <Game />
-  </Provider>,
+  </Provider>
 );

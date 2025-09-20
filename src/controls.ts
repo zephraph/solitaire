@@ -1,26 +1,18 @@
 import { useKeyboard } from "@opentui/react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { assert, cloneDeep as clone, last } from "es-toolkit";
+import { useAtom, useAtomValue } from "jotai";
+import { Rank } from "./components/Card";
 import {
-  highlightedAreaAtom,
-  cardAreaAtom,
-  selectedCardAtom,
-  highlightedCardAtom,
-  cardStackAtom,
-} from "./store";
-import {
+  cardHasFaceUpCardsAboveIt,
+  cardHasFaceUpCardsBelowIt,
+  cyclePosition,
   getStackFromTableau,
   getTopTableauCardIndex,
-  cyclePosition,
-  cardHasFaceUpCardsBelowIt,
-  cardHasFaceUpCardsAboveIt,
-  isOppositeSuit,
+  isCardMovableToFoundation,
   isCardMovableToTableau,
   useForceUpdate,
-  isCardMovableToFoundation,
 } from "./helpers";
-import { assert, cloneDeep as clone } from "es-toolkit";
-import { last } from "es-toolkit";
-import { Suit, Rank } from "./components/Card";
+import { cardAreaAtom, cardStackAtom, highlightedAreaAtom, highlightedCardAtom, selectedCardAtom } from "./store";
 
 export const useHighlightCardControls = () => {
   const [highlighted, setHighlighted] = useAtom(highlightedAreaAtom);
@@ -28,10 +20,8 @@ export const useHighlightCardControls = () => {
   useKeyboard((key) => {
     switch (highlighted.area) {
       case "stock":
-        if (key.name === "right")
-          setHighlighted({ area: "waste", position: 0 });
-        if (key.name === "left")
-          setHighlighted({ area: "foundation", position: 3 });
+        if (key.name === "right") setHighlighted({ area: "waste", position: 0 });
+        if (key.name === "left") setHighlighted({ area: "foundation", position: 3 });
         if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
@@ -42,8 +32,7 @@ export const useHighlightCardControls = () => {
 
       case "waste":
         if (key.name === "left") setHighlighted({ area: "stock", position: 0 });
-        if (key.name === "right")
-          setHighlighted({ area: "foundation", position: 0 });
+        if (key.name === "right") setHighlighted({ area: "foundation", position: 0 });
         if (key.name === "down" || key.name === "up")
           setHighlighted({
             area: "tableau",
@@ -75,12 +64,9 @@ export const useHighlightCardControls = () => {
               });
         break;
 
-      case "tableau":
+      case "tableau": {
         if (key.name === "left" || key.name === "right") {
-          const position = cyclePosition(
-            key.name === "left" ? -1 : 1,
-            highlighted.position,
-          );
+          const position = cyclePosition(key.name === "left" ? -1 : 1, highlighted.position);
           setHighlighted({
             area: "tableau",
             position,
@@ -89,29 +75,21 @@ export const useHighlightCardControls = () => {
           return;
         }
         const stack = getStackFromTableau(tableau, highlighted.position);
-        if (
-          key.name === "up" &&
-          cardHasFaceUpCardsBelowIt(stack, highlighted.index)
-        ) {
+        if (key.name === "up" && cardHasFaceUpCardsBelowIt(stack, highlighted.index)) {
           setHighlighted({
             area: "tableau",
             position: highlighted.position,
             index: highlighted.index - 1,
           });
-        } else if (
-          key.name === "down" &&
-          cardHasFaceUpCardsAboveIt(stack, highlighted.index)
-        ) {
+        } else if (key.name === "down" && cardHasFaceUpCardsAboveIt(stack, highlighted.index)) {
           setHighlighted({
             area: "tableau",
             position: highlighted.position,
             index: highlighted.index + 1,
           });
         } else if (key.name === "up" || key.name === "down") {
-          if (highlighted.position === 0)
-            setHighlighted({ area: "stock", position: 0 });
-          else if (highlighted.position === 1)
-            setHighlighted({ area: "waste", position: 0 });
+          if (highlighted.position === 0) setHighlighted({ area: "stock", position: 0 });
+          else if (highlighted.position === 1) setHighlighted({ area: "waste", position: 0 });
           else if (highlighted.position === 2)
             setHighlighted({
               area: "tableau",
@@ -125,6 +103,7 @@ export const useHighlightCardControls = () => {
             });
         }
         break;
+      }
     }
   });
 };
@@ -142,16 +121,12 @@ export const useStockControls = () => {
       const card = newStock.pop();
       assert(card, "Stock should not be empty");
       updateStock(newStock);
-      updateWaste(
-        newWaste
-          .concat(card)
-          .map((card) => ({ ...card, faceUp: true, selected: false })),
-      );
+      updateWaste(newWaste.concat(card).map((card) => ({ ...card, faceUp: true, selected: false })));
     } else if (waste.length) {
       updateStock(
         clone(waste)
           .reverse()
-          .map((card) => ({ ...card, faceUp: false, selected: false })),
+          .map((card) => ({ ...card, faceUp: false, selected: false }))
       );
       updateWaste([]);
     }
@@ -162,13 +137,9 @@ export const useSelectCardControls = () => {
   const forceUpdate = useForceUpdate();
   const highlightedArea = useAtomValue(highlightedAreaAtom);
   const [highlightedCard, updateHighlightedCard] = useAtom(highlightedCardAtom);
-  const [highlightedStack, updateHighlightedStack] = useAtom(
-    cardStackAtom(highlightedArea),
-  );
+  const [highlightedStack, updateHighlightedStack] = useAtom(cardStackAtom(highlightedArea));
   const [selectedCard, setSelectedCard] = useAtom(selectedCardAtom);
-  const [selectedStack, updateSelectedStack] = useAtom(
-    cardStackAtom(selectedCard),
-  );
+  const [selectedStack, updateSelectedStack] = useAtom(cardStackAtom(selectedCard));
   const [foundation, updateFoundation] = useAtom(cardAreaAtom("foundation"));
   const moveCard = () => {
     if (!selectedCard) return;
@@ -176,9 +147,7 @@ export const useSelectCardControls = () => {
     const originStack = clone(selectedStack);
     const remainingStack = originStack.slice(0, selectedCardIndex);
     const movingStack = originStack.slice(selectedCardIndex);
-    updateSelectedStack(
-      remainingStack.map((card) => ({ ...card, selected: false })),
-    );
+    updateSelectedStack(remainingStack.map((card) => ({ ...card, selected: false })));
 
     updateHighlightedStack([
       ...highlightedStack,
@@ -196,10 +165,7 @@ export const useSelectCardControls = () => {
     // Move card to empty space
     if (selectedCard && !highlightedCard) {
       // Move king to empty tableau space
-      if (
-        highlightedArea.area === "tableau" &&
-        selectedCard.rank === Rank.King
-      ) {
+      if (highlightedArea.area === "tableau" && selectedCard.rank === Rank.King) {
         moveCard();
       }
       // Move ace to empty foundation space
@@ -210,7 +176,7 @@ export const useSelectCardControls = () => {
       ) {
         const newStack = clone(selectedStack);
         const cardToMove = {
-          ...newStack.pop()!,
+          ...(newStack.pop() ?? {}),
           ...highlightedArea,
           selected: false,
         };
@@ -245,10 +211,7 @@ export const useSelectCardControls = () => {
     }
 
     // Move card onto another card on tableau
-    else if (
-      highlightedArea.area === "tableau" &&
-      isCardMovableToTableau(highlightedCard, selectedCard)
-    ) {
+    else if (highlightedArea.area === "tableau" && isCardMovableToTableau(highlightedCard, selectedCard)) {
       moveCard();
     }
 
