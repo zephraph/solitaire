@@ -15,7 +15,7 @@ _.path = "node_modules/.bin"
 run = "bun game"
 
 [tasks.build]
-run = "swc src -d game"
+run = "tsc"
 
 [tasks.dev]
 run = "bun build -w"
