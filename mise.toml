@@ -26,5 +26,12 @@ raw = true
 [tasks.prepack]
 run = "bun build"
 
+[tasks.format]
+alias = "fmt"
+run = "biome check --write --unsafe ."
+
+[tasks.lint]
+run = "biome check ."
+
 [tasks.release]
 run = "bunx auto shipit"
